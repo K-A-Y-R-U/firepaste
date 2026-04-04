@@ -13,7 +13,10 @@
     @livewireStyles
 </head>
 <body>
-    <livewire:header /> <!-- Reemplaza @include('layouts.header') -->
+    {{-- ✅ Admin Bar — solo visible para admins logueados --}}
+    <x-admin-bar-admin-bar />
+
+    <livewire:header />
 
     <main>
         @yield('content')

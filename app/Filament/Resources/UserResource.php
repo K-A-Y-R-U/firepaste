@@ -74,8 +74,9 @@ class UserResource extends Resource
                         }));
                     })->label('Filtrar por rol'),
 
+                // ✅ Corregido: ya no usa is_vip_active (columna eliminada)
                 Tables\Filters\Filter::make('vip_only')
-                    ->query(fn (Builder $q): Builder => $q->where('is_vip_active', true)->where('vip_expires_at', '>', now()))
+                    ->query(fn (Builder $q): Builder => $q->where('vip_expires_at', '>', now()))
                     ->label('Solo usuarios VIP'),
             ])
             ->actions([
@@ -88,6 +89,34 @@ class UserResource extends Resource
                             ->options(fn () => \DB::table('hexa_roles')->pluck('name', 'id')->toArray())
                             ->placeholder('Selecciona un rol'),
                         Forms\Components\Textarea::make('reason')->label('Motivo (opcional)')->rows(2),
+                        // ✅ Muestra estado VIP actual
+                        Forms\Components\Placeholder::make('vip_info')
+                            ->label('Estado VIP')
+                            ->content(fn (User $record): string => $record->isVip()
+                                ? '✅ VIP activo — expira: ' . $record->vip_expires_at->format('d/m/Y H:i')
+                                : '❌ Sin VIP activo'),
+                        // ✅ Botón Quitar VIP dentro del modal
+                        Forms\Components\Actions::make([
+                            Forms\Components\Actions\Action::make('quitar_vip')
+                                ->label('Quitar VIP')
+                                ->color('danger')
+                                ->icon('heroicon-o-x-circle')
+                                ->visible(fn (User $record): bool => $record->isVip())
+                                ->requiresConfirmation()
+                                ->modalHeading('¿Quitar VIP?')
+                                ->modalDescription('Esto desactivará el acceso VIP del usuario inmediatamente.')
+                                ->action(function (User $record): void {
+                                    $record->update(['vip_expires_at' => null]);
+                                    $userRole = \DB::table('hexa_roles')->whereRaw('LOWER(name) = ?', ['user'])->first();
+                                    if ($userRole) {
+                                        \DB::table('user_roles')->where('user_id', $record->id)->delete();
+                                        \DB::table('user_roles')->insert([
+                                            'user_id' => $record->id, 'role_id' => $userRole->id,
+                                            'created_at' => now(), 'updated_at' => now(),
+                                        ]);
+                                    }
+                                }),
+                        ]),
                     ])
                     ->fillForm(function (User $record): array {
                         $currentRole = \DB::table('user_roles')->where('user_id', $record->id)->first();
@@ -102,9 +131,8 @@ class UserResource extends Resource
                             ]);
                         }
                     })
-                    ->requiresConfirmation()->modalHeading('Gestionar Roles'),
+                    ->modalHeading('Gestionar Roles'),
 
-                // ✅ CORREGIDO: ahora activa vip_expires_at correctamente
                 Action::make('makeVip')
                     ->label('Hacer VIP')->icon('heroicon-o-star')->color('success')
                     ->visible(fn (User $record): bool => !$record->isVip())
@@ -147,7 +175,6 @@ class UserResource extends Resource
                             }
                         })->requiresConfirmation(),
 
-                    // ✅ CORREGIDO: bulk makeVip también activa vip_expires_at
                     Tables\Actions\BulkAction::make('makeVipBulk')
                         ->label('Hacer VIP')->icon('heroicon-o-star')->color('success')
                         ->form([

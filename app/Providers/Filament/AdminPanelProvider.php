@@ -20,6 +20,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Hexters\HexaLite\HexaLite;
 use Joaopaulolndev\FilamentGeneralSettings\FilamentGeneralSettingsPlugin;
+use Attargah\AdminBar\AdminBarPlugin;
 
 // Importar los recursos de Gift Codes
 use App\Filament\Resources\GiftCodeResource;
@@ -64,8 +65,6 @@ class AdminPanelProvider extends PanelProvider
                     ->url('/dashboard', shouldOpenInNewTab: false)
                     ->icon('heroicon-o-presentation-chart-line')
                     ->sort(3),
-
-                // ...
             ])
             ->plugins([
                 HexaLite::make(),
@@ -76,6 +75,12 @@ class AdminPanelProvider extends PanelProvider
                     ->setNavigationGroup('Setting & Access')
                     ->setTitle('Configuración General')
                     ->setNavigationLabel('Options'),
+                // ✅ Admin Bar
+                AdminBarPlugin::make()
+                    ->setBarBackgroundColor('bg-gray-900')
+                    ->setBarTextColor('text-white')
+                    ->setBarHeight('h-10')
+                    ->setBarTitle('Firepaste Admin'),
             ])
             ->authMiddleware([
                 Authenticate::class,

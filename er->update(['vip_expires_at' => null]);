@@ -1,0 +1,12 @@
+[90m= [39m[34;4mApp\Models\User[39;24m {#7192
+    [34mid[39m: [35m1[39m,
+    [34mname[39m: "[32mnotuz[39m",
+    [34memail[39m: "[32mnestor.meza.15@hotmail.com[39m",
+    [34memail_verified_at[39m: [36mnull[39m,
+    #[33mpassword[39m: "[32m$2y$12$s5LnZuiylEsTf0RD8jOhcO2.bPAS.o984iDl1SyEksXq5laVlaHua[39m",
+    [34mvip_expires_at[39m: "[32m2026-05-04 06:04:29[39m",
+    #[33mremember_token[39m: [36mnull[39m,
+    [34mcreated_at[39m: "[32m2025-08-26 03:20:30[39m",
+    [34mupdated_at[39m: "[32m2026-04-04 06:04:29[39m",
+  }
+
