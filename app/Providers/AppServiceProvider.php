@@ -21,12 +21,11 @@ class AppServiceProvider extends ServiceProvider
             Css::make('custom-styles', '/build/assets/filament.css'),
         ]);
 
-        // Compartir configuraciones con vistas Blade (mismo patrón que ya usas)
         View::composer(['layouts.header', 'layouts.footer', 'livewire.header', 'posts.show', 'vip.show'], function ($view) {
             $settings = GeneralSetting::first();
             $siteName = $settings ? $settings->site_name : config('app.name', 'Laravel');
             $moreConfigs = $settings ? json_decode($settings->more_configs, true) : [];
-            
+
             $view->with('siteName', $siteName)
                  ->with('moreConfigs', $moreConfigs);
         });

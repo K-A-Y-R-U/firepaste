@@ -11,8 +11,6 @@ use App\Http\Controllers\MembresiaController;
 Route::get('/', [PostController::class, 'index'])->name('home');
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
-
-// ✅ CORREGIDO: sin ruta duplicada
 Route::get('/memberships', [MembresiaController::class, 'index'])->name('membresias');
 
 // Rutas protegidas
@@ -24,8 +22,8 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-// Gift codes
-Route::middleware(['auth'])->group(function () {
+// ✅ Gift codes con rate limiting
+Route::middleware(['auth', 'throttle:20,1'])->group(function () {
     Route::get('/gift-codes/redeem', [GiftCodeController::class, 'showRedeemForm'])->name('gift-codes.redeem');
     Route::post('/gift-codes/redeem', [GiftCodeController::class, 'redeem'])->name('gift-codes.redeem.process');
     Route::get('/gift-codes/success', [GiftCodeController::class, 'success'])->name('gift-codes.success');
