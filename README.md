@@ -1,6 +1,3 @@
-<p align="center">
-  <img src="public/assets/images/banner.jpg" alt="Firepaste Banner" width="100%">
-</p>
 
 <h1 align="center">🔥 Firepaste</h1>
 
