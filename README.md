@@ -190,6 +190,57 @@ git commit -m "descripción del cambio"
 git push
 ```
 
+
+## 🚀 Deploy en Producción
+
+### Script de deploy rápido
+Crea el archivo `deploy.sh` en el servidor:
+```bash
+cat > /home/firepaste.com/deploy.sh << 'EOF'
+#!/bin/bash
+cd /home/firepaste.com/public_html
+git pull origin Beta-Developer
+composer install --no-dev --optimize-autoloader
+npm install
+npm run build
+php artisan optimize:clear
+php artisan storage:link
+chown -R firep9512:firep9512 storage bootstrap/cache
+echo "✅ Deploy completado!"
+EOF
+chmod +x /home/firepaste.com/deploy.sh
+```
+
+Luego para deployar solo ejecuta:
+```bash
+bash /home/firepaste.com/deploy.sh
+```
+
+---
+
+### ⚠️ Fix Tailwind + Filament (ya incluido en el repo)
+El `tailwind.config.js` requiere el preset de Filament. Ya está corregido en el repositorio. Si el build falla verifica que `resources/css/filament.css` contenga:
+```css
+@import '../../vendor/filament/filament/resources/css/theme.css';
+@import '../../vendor/awcodes/filament-tiptap-editor/resources/css/plugin.css';
+@config '../../tailwind.config.js';
+```
+
+---
+
+### ⚠️ Extensiones PHP requeridas en el servidor
+```bash
+apt install php8.3-intl php8.3-zip php8.3-mysql -y
+```
+
+---
+
+### ⚠️ Permisos de storage en producción
+```bash
+chown -R firep9512:firep9512 storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+```
+
 ---
 
 ## 📄 Licencia
