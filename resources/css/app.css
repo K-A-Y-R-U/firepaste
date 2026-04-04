@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* CSS personalizado para hacer el TiptapEditor más grande */
+.tiptap-large-editor .tiptap-wrapper {
+    min-height: 500px !important;
+}
+
+.tiptap-large-editor .ProseMirror {
+    min-height: 450px !important;
+    height: auto !important;
+    padding: 1rem !important;
+}
+
+/* Alternativa más general para todos los editores Tiptap */
+.fi-fo-tiptap-editor .tiptap-wrapper {
+    min-height: 500px !important;
+}
+
+.fi-fo-tiptap-editor .ProseMirror {
+    min-height: 450px !important;
+    height: auto !important;
+    padding: 1rem !important;
+}
+
+/* Si los anteriores no funcionan, prueba estos selectores más específicos */
+[data-field="contenido"] .tiptap-wrapper {
+    min-height: 500px !important;
+}
+
+[data-field="contenido"] .ProseMirror {
+    min-height: 450px !important;
+    height: auto !important;
+}

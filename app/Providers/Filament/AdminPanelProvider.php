@@ -19,6 +19,12 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Hexters\HexaLite\HexaLite;
+use Joaopaulolndev\FilamentGeneralSettings\FilamentGeneralSettingsPlugin;
+
+// Importar los recursos de Gift Codes
+use App\Filament\Resources\GiftCodeResource;
+use App\Filament\Resources\GiftCodeRedemptionResource;
+
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -63,6 +69,13 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 HexaLite::make(),
+                FilamentGeneralSettingsPlugin::make()
+                    ->canAccess(fn() => auth()->check())
+                    ->setSort(4000)
+                    ->setIcon('heroicon-o-cog-8-tooth')
+                    ->setNavigationGroup('Setting & Access')
+                    ->setTitle('Configuración General')
+                    ->setNavigationLabel('Options'),
             ])
             ->authMiddleware([
                 Authenticate::class,

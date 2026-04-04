@@ -8,10 +8,10 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
+        './vendor/filament/**/*.blade.php',
+        './vendor/awcodes/filament-tiptap-editor/resources/**/*.blade.php',
         'node_modules/preline/dist/*.js',
-
     ],
-
     theme: {
         extend: {
             fontFamily: {
@@ -19,6 +19,11 @@ export default {
             },
         },
     },
-
-    plugins: [require('preline/plugin'),forms],
+    plugins: [
+        require('preline/plugin'),
+        require('@tailwindcss/forms'),
+        require('@tailwindcss/nesting'),
+        require('tailwindcss'),
+        require('autoprefixer'),
+    ],
 };
