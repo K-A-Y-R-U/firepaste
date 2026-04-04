@@ -8,6 +8,7 @@
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",
         "@tailwindcss/nesting": "^0.0.0-insiders",
+        "@tailwindcss/typography": "^0.5.19",
         "autoprefixer": "^10.4.2",
         "axios": "^1.7.4",
         "laravel-vite-plugin": "^1.0",
