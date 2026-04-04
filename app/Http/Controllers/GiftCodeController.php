@@ -6,19 +6,18 @@ use App\Models\GiftCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GiftCodeController extends Controller
 {
-    // Eliminar el constructor ya que el middleware se aplica en las rutas
-
     public function showRedeemForm()
     {
         $user = Auth::user();
         $vipStatus = $user->getVipStatus();
-        
+
         return view('gift-codes.redeem', [
             'user' => $user,
-            'vipStatus' => $vipStatus
+            'vipStatus' => $vipStatus,
         ]);
     }
 
@@ -34,24 +33,16 @@ class GiftCodeController extends Controller
         try {
             DB::beginTransaction();
 
-            // Buscar el código
             $giftCode = GiftCode::where('code', $code)->first();
 
             if (!$giftCode) {
-                return back()->withErrors([
-                    'code' => 'Código no válido o no encontrado.'
-                ]);
+                return back()->withErrors(['code' => 'Código no válido o no encontrado.']);
             }
 
-            // Verificar si puede ser usado por este usuario
             if (!$giftCode->canBeUsedBy($user)) {
-                $errorMessage = $this->getErrorMessage($giftCode, $user);
-                return back()->withErrors([
-                    'code' => $errorMessage
-                ]);
+                return back()->withErrors(['code' => $this->getErrorMessage($giftCode, $user)]);
             }
 
-            // Canjear el código
             $redemption = $giftCode->redeem($user);
 
             DB::commit();
@@ -65,9 +56,16 @@ class GiftCodeController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            
+
+            // ✅ CORREGIDO: error real va al log, mensaje genérico al usuario
+            Log::error('Error al canjear gift code', [
+                'user_id' => $user->id,
+                'code' => $code,
+                'error' => $e->getMessage(),
+            ]);
+
             return back()->withErrors([
-                'code' => 'Error al canjear el código: ' . $e->getMessage()
+                'code' => 'Ocurrió un error al procesar el código. Inténtalo de nuevo.',
             ]);
         }
     }
@@ -79,11 +77,10 @@ class GiftCodeController extends Controller
         }
 
         $user = Auth::user();
-        $vipStatus = $user->getVipStatus();
 
         return view('gift-codes.success', [
             'user' => $user,
-            'vipStatus' => $vipStatus,
+            'vipStatus' => $user->getVipStatus(),
             'message' => session('message'),
             'vip_days' => session('vip_days'),
             'expires_at' => session('expires_at'),
@@ -101,7 +98,7 @@ class GiftCodeController extends Controller
         return view('gift-codes.my-redemptions', [
             'user' => $user,
             'redemptions' => $redemptions,
-            'vipStatus' => $user->getVipStatus()
+            'vipStatus' => $user->getVipStatus(),
         ]);
     }
 
@@ -110,20 +107,15 @@ class GiftCodeController extends Controller
         if (!$giftCode->is_active) {
             return 'Este código está desactivado.';
         }
-
         if ($giftCode->expires_at && $giftCode->expires_at->isPast()) {
             return 'Este código ha expirado.';
         }
-
         if ($giftCode->used_count >= $giftCode->max_uses) {
             return 'Este código ya ha alcanzado su límite de usos.';
         }
-
-        // Verificar si el usuario ya lo usó
         if ($giftCode->redemptions()->where('user_id', $user->id)->exists()) {
             return 'Ya has usado este código anteriormente.';
         }
-
         return 'Este código no puede ser usado en este momento.';
     }
 }

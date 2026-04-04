@@ -13,16 +13,15 @@ class Post extends Model
         'titulo',
         'pestana',
         'contenido',
-        'catalog_id'  // ← Agregar esta línea
+        'catalog_id',
+        'views', // ✅ AGREGADO
     ];
 
-    // Relación con catálogo
     public function catalog()
     {
         return $this->belongsTo(Catalog::class);
     }
 
-    // Scope para posts por catálogo
     public function scopeByCatalog($query, $catalogId)
     {
         return $query->where('catalog_id', $catalogId);
