@@ -232,7 +232,7 @@
     <div class="auth-panel-left">
         <div class="grid-decoration"></div>
         <div class="left-content">
-            <a class="navbar-brand left-brand" href="{{ url('/') }}" wire:navigate>{{ $siteName }}</a>
+            <a class="navbar-brand left-brand" href="{{ url('/') }}">{{ $siteName }}</a>
             <p class="left-tagline">Tu plataforma para compartir<br>contenido de forma rápida<br>y organizada.</p>
             <div class="feature-list">
                 <div class="feature-item">
@@ -258,7 +258,7 @@
     <div class="auth-panel-right">
         <div class="auth-form-wrapper">
             <div class="auth-logo-mobile">
-                <a class="navbar-brand" href="{{ url('/') }}" wire:navigate>{{ $siteName }}</a>
+                <a class="navbar-brand" href="{{ url('/') }}">{{ $siteName }}</a>
             </div>
             {{ $slot }}
         </div>

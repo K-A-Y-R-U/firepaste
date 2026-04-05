@@ -1,207 +1,276 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('title', 'Mis Canjes de Códigos')
 
-@section('page-title', 'Mis Canjes de Códigos')
-
 @section('content')
-    <!-- Header -->
-    <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-2">Mis Canjes de Códigos</h1>
-        <p class="text-gray-600 dark:text-gray-400">Historial de códigos de regalo canjeados</p>
-    </div>
+<div class="container py-4" style="min-height: calc(100vh - 200px);">
 
-    <!-- User VIP Status Summary -->
-    <div class="max-w-4xl mx-auto mb-8">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-purple-500">
-            <div class="flex flex-col md:flex-row md:items-center justify-between">
-                <div class="mb-4 md:mb-0">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ $user->name }}</h3>
-                    <p class="text-gray-600 dark:text-gray-400">{{ $user->email }}</p>
-                </div>
-                
-                <div class="flex flex-col md:flex-row md:items-center gap-4">
-                    <div class="text-center md:text-right">
-                        <div class="text-sm text-gray-500 dark:text-gray-400">Estado VIP</div>
-                        @if($vipStatus['is_active'])
-                            <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                </svg>
-                                Activo ({{ $vipStatus['days_remaining'] }} días)
-                            </div>
-                        @else
-                            <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                                Inactivo
-                            </div>
-                        @endif
+    {{-- Header --}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="dashboard-welcome">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div>
+                        <h4 class="welcome-title mb-1"><i class="bi bi-clock-history me-2" style="color:#667eea;"></i>Mis Canjes de Códigos</h4>
+                        <p class="welcome-sub mb-0">Historial de códigos de regalo canjeados</p>
                     </div>
-                    
-                    @if($vipStatus['is_active'])
-                        <div class="text-center md:text-right">
-                            <div class="text-sm text-gray-500 dark:text-gray-400">Expira el</div>
-                            <div class="font-medium text-purple-600 dark:text-purple-400">
-                                {{ $vipStatus['expires_at']->format('d/m/Y H:i') }}
-                            </div>
-                        </div>
-                    @endif
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('gift-codes.redeem') }}" class="btn-action">
+                            <i class="bi bi-gift me-1"></i> Canjear Código
+                        </a>
+                        <a href="{{ route('dashboard') }}" class="btn-back">
+                            <i class="bi bi-arrow-left me-1"></i> Dashboard
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Redemptions List -->
-    <div class="max-w-4xl mx-auto">
-        @if($redemptions->count() > 0)
-            <div class="grid gap-6">
-                @foreach($redemptions as $redemption)
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
-                        <div class="p-6">
-                            <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                                <div class="mb-2 md:mb-0">
-                                    <div class="flex items-center mb-2">
-                                        <div class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-3 py-1 rounded-full text-sm font-mono font-bold">
-                                            {{ $redemption->giftCode->code }}
-                                        </div>
-                                        <div class="ml-3 text-lg font-semibold text-gray-800 dark:text-gray-200">
-                                            {{ $redemption->giftCode->vip_days }} días VIP
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="text-sm text-gray-600 dark:text-gray-400">
-                                        Canjeado el {{ $redemption->redeemed_at->format('d/m/Y H:i') }}
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center">
-                                    @if($redemption->isVipActive())
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                            </svg>
-                                            Activo
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                                            </svg>
-                                            Expirado
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <!-- Redemption Details -->
-                            <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                    <div>
-                                        <span class="text-gray-500 dark:text-gray-400">VIP inició:</span>
-                                        <div class="font-medium text-gray-800 dark:text-gray-200">
-                                            {{ $redemption->vip_starts_at->format('d/m/Y H:i') }}
-                                        </div>
-                                    </div>
-                                    
-                                    <div>
-                                        <span class="text-gray-500 dark:text-gray-400">VIP termina:</span>
-                                        <div class="font-medium text-gray-800 dark:text-gray-200">
-                                            {{ $redemption->vip_ends_at->format('d/m/Y H:i') }}
-                                        </div>
-                                    </div>
-                                    
-                                    <div>
-                                        <span class="text-gray-500 dark:text-gray-400">Días restantes:</span>
-                                        <div class="font-medium {{ $redemption->isVipActive() ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400' }}">
-                                            {{ $redemption->getDaysRemaining() }} días
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Progress Bar -->
-                            @if($redemption->isVipActive())
-                                <div class="mt-4">
-                                    @php
-                                        $totalDays = $redemption->vip_starts_at->diffInDays($redemption->vip_ends_at);
-                                        $remainingDays = $redemption->getDaysRemaining();
-                                        $usedDays = $totalDays - $remainingDays;
-                                        $percentage = $totalDays > 0 ? ($usedDays / $totalDays) * 100 : 0;
-                                    @endphp
-                                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-                                        <span>Progreso: {{ $usedDays }}/{{ $totalDays }} días utilizados</span>
-                                    </div>
-                                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                                        <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300" 
-                                             style="width: {{ $percentage }}%"></div>
-                                    </div>
-                                </div>
-                            @endif
+    {{-- Resumen VIP --}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="dashboard-card vip-card {{ $vipStatus['is_active'] ? 'vip-active' : 'vip-inactive' }}">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="vip-avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+                        <div>
+                            <div class="vip-name">{{ $user->name }}</div>
+                            <div class="vip-email">{{ $user->email }}</div>
                         </div>
                     </div>
-                @endforeach
-            </div>
-
-            <!-- Summary Stats -->
-            <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Estadísticas de Canjes</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="text-center">
-                        <div class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $redemptions->count() }}</div>
-                        <div class="text-sm text-gray-600 dark:text-gray-400">Códigos canjeados</div>
-                    </div>
-                    
-                    <div class="text-center">
-                        <div class="text-3xl font-bold text-purple-600 dark:text-purple-400">{{ $redemptions->sum(function($r) { return $r->giftCode->vip_days; }) }}</div>
-                        <div class="text-sm text-gray-600 dark:text-gray-400">Total días VIP obtenidos</div>
-                    </div>
-                    
-                    <div class="text-center">
-                        <div class="text-3xl font-bold text-green-600 dark:text-green-400">{{ $redemptions->where('vip_ends_at', '>', now())->count() }}</div>
-                        <div class="text-sm text-gray-600 dark:text-gray-400">Códigos activos</div>
+                    <div class="d-flex align-items-center gap-4 flex-wrap">
+                        <div class="text-center">
+                            <div class="vip-stat-label">Estado VIP</div>
+                            @if($vipStatus['is_active'])
+                                <span class="vip-stat-value active">✨ Activo ({{ $vipStatus['days_remaining'] }} días)</span>
+                            @else
+                                <span class="vip-stat-value inactive">Inactivo</span>
+                            @endif
+                        </div>
+                        @if($vipStatus['is_active'])
+                            <div class="text-center">
+                                <div class="vip-stat-label">Expira el</div>
+                                <div class="vip-stat-value">{{ $vipStatus['expires_at']->format('d/m/Y') }}</div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-        @else
-            <!-- Empty State -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
-                <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-                    <svg class="w-12 h-12 text-gray-400 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
-                    </svg>
-                </div>
-                
-                <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">No has canjeado códigos</h3>
-                <p class="text-gray-600 dark:text-gray-400 mb-6">Cuando canjees tu primer código de regalo, aparecerá aquí.</p>
-                
-                <a href="{{ route('gift-codes.redeem') }}" 
-                   class="inline-flex items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-200 hover:from-blue-700 hover:to-purple-700 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-700 transform hover:scale-105">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
-                    </svg>
-                    Canjear mi primer código
-                </a>
+    {{-- Stats --}}
+    @if($redemptions->count() > 0)
+    <div class="row mb-4 g-3">
+        <div class="col-4">
+            <div class="stat-card">
+                <div class="stat-number" style="color:#667eea;">{{ $redemptions->count() }}</div>
+                <div class="stat-label">Códigos canjeados</div>
             </div>
-        @endif
+        </div>
+        <div class="col-4">
+            <div class="stat-card">
+                <div class="stat-number" style="color:#764ba2;">{{ $redemptions->sum(function($r) { return $r->giftCode->vip_days; }) }}</div>
+                <div class="stat-label">Total días VIP</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="stat-card">
+                <div class="stat-number" style="color:#16a34a;">{{ $redemptions->where('vip_ends_at', '>', now())->count() }}</div>
+                <div class="stat-label">Códigos activos</div>
+            </div>
+        </div>
     </div>
+    @endif
 
-    <!-- Navigation -->
-    <div class="max-w-4xl mx-auto mt-8 text-center space-x-4">
-        <a href="{{ route('gift-codes.redeem') }}" 
-           class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
-            </svg>
-            Canjear Código
-        </a>
-        <span class="text-gray-400 dark:text-gray-600">|</span>
-        <a href="{{ route('dashboard') }}" 
-           class="inline-flex items-center text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 transition-colors">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"/>
-            </svg>
-            Dashboard
-        </a>
-    </div>
+    {{-- Lista de canjes --}}
+    @if($redemptions->count() > 0)
+        <div class="row g-3">
+            @foreach($redemptions as $redemption)
+            @php
+                $totalDays = $redemption->vip_starts_at->diffInDays($redemption->vip_ends_at);
+                $remainingDays = $redemption->getDaysRemaining();
+                $usedDays = $totalDays - $remainingDays;
+                $percentage = $totalDays > 0 ? ($usedDays / $totalDays) * 100 : 0;
+            @endphp
+            <div class="col-12">
+                <div class="dashboard-card redemption-card">
+                    <div class="redemption-header">
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                            <span class="code-badge">{{ $redemption->giftCode->code }}</span>
+                            <span class="days-badge"><i class="bi bi-star-fill me-1"></i>{{ $redemption->giftCode->vip_days }} días VIP</span>
+                            <span class="redeem-date"><i class="bi bi-calendar me-1"></i>Canjeado el {{ $redemption->redeemed_at->format('d/m/Y H:i') }}</span>
+                        </div>
+                        @if($redemption->isVipActive())
+                            <span class="status-badge active"><i class="bi bi-check-circle-fill me-1"></i>Activo</span>
+                        @else
+                            <span class="status-badge expired"><i class="bi bi-x-circle-fill me-1"></i>Expirado</span>
+                        @endif
+                    </div>
+
+                    <div class="redemption-details">
+                        <div class="detail-item">
+                            <span class="detail-label">VIP inició</span>
+                            <span class="detail-value">{{ $redemption->vip_starts_at->format('d/m/Y H:i') }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">VIP termina</span>
+                            <span class="detail-value">{{ $redemption->vip_ends_at->format('d/m/Y H:i') }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Días restantes</span>
+                            <span class="detail-value {{ $redemption->isVipActive() ? 'text-success' : 'text-muted' }}">{{ $remainingDays }} días</span>
+                        </div>
+                    </div>
+
+                    @if($redemption->isVipActive())
+                        <div class="progress-wrap">
+                            <div class="progress-label">
+                                <span>Progreso: {{ $usedDays }}/{{ $totalDays }} días utilizados</span>
+                                <span>{{ round($percentage) }}%</span>
+                            </div>
+                            <div class="progress-bar-custom">
+                                <div class="progress-fill" style="width: {{ $percentage }}%"></div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+    @else
+        {{-- Empty state --}}
+        <div class="row">
+            <div class="col-12">
+                <div class="dashboard-card empty-state">
+                    <i class="bi bi-gift empty-icon"></i>
+                    <h5 class="empty-title">No has canjeado códigos</h5>
+                    <p class="empty-sub">Cuando canjees tu primer código de regalo, aparecerá aquí.</p>
+                    <a href="{{ route('gift-codes.redeem') }}" class="redeem-btn">
+                        <i class="bi bi-gift me-2"></i>Canjear mi primer código
+                    </a>
+                </div>
+            </div>
+        </div>
+    @endif
+
+</div>
+
+<style>
+    .dashboard-welcome {
+        background: #fff; border-radius: 14px; padding: 1.5rem 2rem;
+        border: 1px solid #e9ecef; box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .welcome-title { font-size: 1.3rem; font-weight: 700; color: #1a1a2e; }
+    .welcome-sub { color: #888; font-size: 0.9rem; }
+
+    .btn-back {
+        display: inline-flex; align-items: center; padding: 0.5rem 1.2rem;
+        border-radius: 8px; background: #f1f3f5; color: #495057;
+        font-size: 0.88rem; font-weight: 600; text-decoration: none; transition: all 0.2s;
+    }
+    .btn-back:hover { background: #e9ecef; color: #333; }
+
+    .btn-action {
+        display: inline-flex; align-items: center; padding: 0.5rem 1.2rem;
+        border-radius: 8px; background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff; font-size: 0.88rem; font-weight: 600;
+        text-decoration: none; transition: all 0.2s;
+    }
+    .btn-action:hover { opacity: 0.9; color: #fff; transform: translateY(-1px); }
+
+    .dashboard-card {
+        background: #fff; border-radius: 14px;
+        border: 1px solid #e9ecef; box-shadow: 0 2px 12px rgba(0,0,0,0.05); overflow: hidden;
+    }
+
+    /* VIP card */
+    .vip-card { padding: 1.5rem 2rem; }
+    .vip-active { background: linear-gradient(135deg, #667eea, #764ba2); border: none; }
+    .vip-inactive { background: linear-gradient(135deg, #2d2d3a, #1a1a2e); border: none; }
+    .vip-avatar {
+        width: 48px; height: 48px; border-radius: 50%;
+        background: rgba(255,255,255,0.2); color: #fff;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.3rem; font-weight: 700; flex-shrink: 0;
+    }
+    .vip-name { font-weight: 700; color: #fff; font-size: 0.95rem; }
+    .vip-email { color: rgba(255,255,255,0.65); font-size: 0.82rem; }
+    .vip-stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.4px; }
+    .vip-stat-value { font-size: 0.88rem; font-weight: 700; color: #fff; display: block; }
+    .vip-stat-value.active { color: #86efac; }
+    .vip-stat-value.inactive { color: rgba(255,255,255,0.5); }
+
+    /* Stats */
+    .stat-card {
+        background: #fff; border-radius: 14px; padding: 1.25rem;
+        border: 1px solid #e9ecef; text-align: center;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .stat-number { font-size: 2rem; font-weight: 800; line-height: 1; margin-bottom: 0.3rem; }
+    .stat-label { font-size: 0.8rem; color: #888; font-weight: 500; }
+
+    /* Redemption card */
+    .redemption-card { padding: 0; }
+    .redemption-header {
+        display: flex; align-items: center; justify-content: space-between;
+        flex-wrap: wrap; gap: 0.75rem;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #f1f3f5;
+    }
+    .code-badge {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff; padding: 4px 12px; border-radius: 6px;
+        font-family: 'Courier New', monospace; font-weight: 700; font-size: 0.88rem;
+    }
+    .days-badge {
+        background: #f8f9ff; color: #667eea;
+        padding: 4px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
+    }
+    .redeem-date { color: #888; font-size: 0.82rem; }
+
+    .status-badge {
+        display: inline-flex; align-items: center;
+        padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 600;
+    }
+    .status-badge.active { background: #f0fdf4; color: #16a34a; }
+    .status-badge.expired { background: #f8f9fa; color: #888; }
+
+    .redemption-details {
+        display: flex; gap: 2rem; flex-wrap: wrap;
+        padding: 1rem 1.5rem; background: #fafafa;
+    }
+    .detail-item { display: flex; flex-direction: column; gap: 0.2rem; }
+    .detail-label { font-size: 0.75rem; color: #999; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; }
+    .detail-value { font-size: 0.9rem; color: #333; font-weight: 600; }
+
+    .progress-wrap { padding: 1rem 1.5rem; }
+    .progress-label {
+        display: flex; justify-content: space-between;
+        font-size: 0.78rem; color: #888; margin-bottom: 0.5rem;
+    }
+    .progress-bar-custom { height: 6px; background: #e9ecef; border-radius: 50px; overflow: hidden; }
+    .progress-fill {
+        height: 100%; border-radius: 50px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        transition: width 0.3s ease;
+    }
+
+    /* Empty state */
+    .empty-state { padding: 4rem 2rem; text-align: center; }
+    .empty-icon { font-size: 3.5rem; color: #d1d5db; display: block; margin-bottom: 1rem; }
+    .empty-title { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; margin-bottom: 0.5rem; }
+    .empty-sub { color: #888; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .redeem-btn {
+        display: inline-flex; align-items: center;
+        padding: 0.8rem 1.8rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff; border: none; border-radius: 10px;
+        font-size: 0.95rem; font-weight: 700;
+        text-decoration: none; transition: all 0.25s;
+    }
+    .redeem-btn:hover { color: #fff; transform: translateY(-1px); box-shadow: 0 8px 25px rgba(102,126,234,0.4); }
+</style>
 @endsection

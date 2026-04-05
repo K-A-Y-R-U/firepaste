@@ -69,7 +69,7 @@ new #[Layout('layouts.guest')] class extends Component
                 </div>
                 @if (Route::has('password.request'))
                     <div class="auth-forgot" style="margin-bottom:0;">
-                        <a href="{{ route('password.request') }}" wire:navigate>¿Olvidaste tu contraseña?</a>
+                        <a href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
                     </div>
                 @endif
             </div>
@@ -82,6 +82,6 @@ new #[Layout('layouts.guest')] class extends Component
     </div>
 
     <div class="auth-footer">
-        ¿No tienes cuenta? <a href="{{ route('register') }}" wire:navigate>Regístrate gratis</a>
+        ¿No tienes cuenta? <a href="{{ route('register') }}">Regístrate gratis</a>
     </div>
 </div>

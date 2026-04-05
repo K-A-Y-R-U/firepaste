@@ -1,177 +1,125 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('title', 'Editar Perfil - ' . Auth::user()->name)
 
-@section('page-title', 'Editar Perfil')
-
 @section('content')
-    <!-- Header Card -->
-    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-        <div class="p-6">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-full p-3 mr-4">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
+@php $vipStatus = Auth::user()->getVipStatus(); @endphp
+
+<div class="container py-4" style="min-height: calc(100vh - 200px);">
+
+    {{-- Header --}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="dashboard-welcome">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="profile-avatar-lg">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+                        <div>
+                            <h4 class="welcome-title mb-1">{{ Auth::user()->name }}</h4>
+                            <p class="welcome-sub mb-0">Miembro desde {{ Auth::user()->created_at->format('M Y') }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
-                            Gestiona tu Perfil
-                        </h2>
-                        <p class="text-gray-600 dark:text-gray-400 mt-1">
-                            Actualiza tu información personal y configuración de cuenta
-                        </p>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <div class="text-sm text-gray-500 dark:text-gray-400">Miembro desde</div>
-                    <div class="font-semibold text-gray-800 dark:text-gray-200">{{ Auth::user()->created_at->format('M Y') }}</div>
+                    <a href="{{ route('dashboard') }}" class="btn-back">
+                        <i class="bi bi-arrow-left me-1"></i> Dashboard
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- Sidebar con información del usuario -->
-        <div class="lg:col-span-1 space-y-6">
-            
-            <!-- User Info Card -->
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-center">
-                    <!-- Avatar -->
-                    <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mx-auto flex items-center justify-center mb-4">
-                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
-                    </div>
-                    
-                    <!-- User Details -->
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-3">{{ Auth::user()->email }}</p>
-                    
-                    <!-- Email Verification Status -->
+    <div class="row g-4">
+
+        {{-- Sidebar --}}
+        <div class="col-md-4">
+
+            {{-- Info usuario --}}
+            <div class="dashboard-card mb-4">
+                <div class="dashboard-card-header">
+                    <i class="bi bi-person-fill me-2"></i>Mi Cuenta
+                </div>
+                <div class="dashboard-card-body text-center">
+                    <div class="profile-avatar-xl mx-auto mb-3">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+                    <div class="profile-name">{{ Auth::user()->name }}</div>
+                    <div class="profile-email mb-3">{{ Auth::user()->email }}</div>
+
                     @if(Auth::user()->email_verified_at)
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            Email Verificado
-                        </span>
+                        <span class="status-badge verified"><i class="bi bi-patch-check-fill me-1"></i>Email Verificado</span>
                     @else
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                            </svg>
-                            Email No Verificado
-                        </span>
+                        <span class="status-badge unverified"><i class="bi bi-exclamation-circle-fill me-1"></i>Email No Verificado</span>
                     @endif
                 </div>
             </div>
 
-            <!-- Stats Card -->
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Estadísticas</h3>
-                    <div class="space-y-3">
-                        <div class="flex justify-between">
-                            <span class="text-gray-600 dark:text-gray-400">Días como miembro:</span>
-                            <span class="font-semibold text-blue-600 dark:text-blue-400">{{ Auth::user()->created_at->diffInDays(now()) }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600 dark:text-gray-400">Códigos canjeados:</span>
-                            <span class="font-semibold text-purple-600 dark:text-purple-400">{{ Auth::user()->giftCodeRedemptions()->count() }}</span>
-                        </div>
-                        @php
-                            $vipStatus = Auth::user()->getVipStatus();
-                        @endphp
-                        <div class="flex justify-between">
-                            <span class="text-gray-600 dark:text-gray-400">Estado VIP:</span>
-                            <span class="font-semibold {{ $vipStatus['is_active'] ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400' }}">
-                                {{ $vipStatus['is_active'] ? 'Activo' : 'Inactivo' }}
-                            </span>
-                        </div>
+            {{-- Estadísticas --}}
+            <div class="dashboard-card mb-4">
+                <div class="dashboard-card-header">
+                    <i class="bi bi-bar-chart-fill me-2"></i>Estadísticas
+                </div>
+                <div class="dashboard-card-body">
+                    <div class="account-info-item">
+                        <span class="info-label"><i class="bi bi-calendar me-1"></i>Días como miembro</span>
+                        <span class="info-value stat-highlight">{{ Auth::user()->created_at->diffInDays(now()) }}</span>
+                    </div>
+                    <div class="account-info-item">
+                        <span class="info-label"><i class="bi bi-gift me-1"></i>Códigos canjeados</span>
+                        <span class="info-value stat-highlight purple">{{ Auth::user()->giftCodeRedemptions()->count() }}</span>
+                    </div>
+                    <div class="account-info-item">
+                        <span class="info-label"><i class="bi bi-star me-1"></i>Estado VIP</span>
+                        <span class="info-value {{ $vipStatus['is_active'] ? 'text-success' : '' }}">
+                            {{ $vipStatus['is_active'] ? 'Activo' : 'Inactivo' }}
+                        </span>
                     </div>
                 </div>
             </div>
 
-            <!-- Quick Actions -->
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Acciones Rápidas</h3>
-                    <div class="space-y-3">
-                        <a href="{{ route('gift-codes.redeem') }}" 
-                           class="flex items-center p-3 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/50 dark:hover:bg-blue-900/70 rounded-lg transition-colors">
-                            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
-                            </svg>
-                            <span class="text-blue-800 dark:text-blue-200 font-medium">Canjear Código</span>
-                        </a>
-                        
-                        <a href="{{ route('gift-codes.my-redemptions') }}" 
-                           class="flex items-center p-3 bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/50 dark:hover:bg-purple-900/70 rounded-lg transition-colors">
-                            <svg class="w-5 h-5 text-purple-600 dark:text-purple-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                            </svg>
-                            <span class="text-purple-800 dark:text-purple-200 font-medium">Mis Canjes</span>
-                        </a>
-                    </div>
+            {{-- Acciones rápidas --}}
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <i class="bi bi-lightning-charge-fill me-2"></i>Acciones Rápidas
+                </div>
+                <div class="dashboard-card-body">
+                    <a href="{{ route('gift-codes.redeem') }}" class="dashboard-action-item action-blue mb-2">
+                        <i class="bi bi-gift me-2"></i><span>Canjear Código</span>
+                        <i class="bi bi-chevron-right ms-auto"></i>
+                    </a>
+                    <a href="{{ route('gift-codes.my-redemptions') }}" class="dashboard-action-item action-purple">
+                        <i class="bi bi-clock-history me-2"></i><span>Mis Canjes</span>
+                        <i class="bi bi-chevron-right ms-auto"></i>
+                    </a>
                 </div>
             </div>
+
         </div>
 
-        <!-- Main Content Area -->
-        <div class="lg:col-span-2 space-y-6">
-            
-            <!-- Profile Information Form -->
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-                    <div class="flex items-center">
-                        <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Información Personal</h3>
-                    </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Actualiza tu información personal y dirección de correo electrónico</p>
+        {{-- Formularios --}}
+        <div class="col-md-8">
+
+            {{-- Información personal --}}
+            <div class="dashboard-card mb-4">
+                <div class="dashboard-card-header">
+                    <i class="bi bi-person-vcard-fill me-2"></i>Información Personal
+                    <span class="header-sub">Actualiza tu nombre y correo electrónico</span>
                 </div>
-                <div class="p-6">
+                <div class="dashboard-card-body">
                     @if(class_exists('\Livewire\Component'))
                         @livewire('profile.update-profile-information-form')
                     @else
                         <form method="POST" action="#">
-                            @csrf
-                            @method('patch')
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Nombre Completo
-                                    </label>
-                                    <input type="text" 
-                                           class="w-full px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors" 
-                                           id="name" 
-                                           name="name" 
-                                           value="{{ old('name', Auth::user()->name) }}" 
-                                           required>
+                            @csrf @method('patch')
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label-custom">Nombre Completo</label>
+                                    <input type="text" name="name" class="form-input-custom" value="{{ old('name', Auth::user()->name) }}" required>
                                 </div>
-                                
-                                <div>
-                                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Correo Electrónico
-                                    </label>
-                                    <input type="email" 
-                                           class="w-full px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors" 
-                                           id="email" 
-                                           name="email" 
-                                           value="{{ old('email', Auth::user()->email) }}" 
-                                           required>
+                                <div class="col-md-6">
+                                    <label class="form-label-custom">Correo Electrónico</label>
+                                    <input type="email" name="email" class="form-input-custom" value="{{ old('email', Auth::user()->email) }}" required>
                                 </div>
                             </div>
-                            
-                            <div class="flex justify-end mt-6">
-                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-                                    Guardar Cambios
+                            <div class="d-flex justify-content-end mt-4">
+                                <button type="submit" class="save-btn">
+                                    <i class="bi bi-check-lg me-2"></i>Guardar Cambios
                                 </button>
                             </div>
                         </form>
@@ -179,65 +127,35 @@
                 </div>
             </div>
 
-            <!-- Change Password Form -->
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-                    <div class="flex items-center">
-                        <svg class="w-5 h-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                        </svg>
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Cambiar Contraseña</h3>
-                    </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Asegúrate de usar una contraseña larga y aleatoria para mantener tu cuenta segura</p>
+            {{-- Cambiar contraseña --}}
+            <div class="dashboard-card mb-4">
+                <div class="dashboard-card-header">
+                    <i class="bi bi-lock-fill me-2"></i>Cambiar Contraseña
+                    <span class="header-sub">Usa una contraseña larga y segura</span>
                 </div>
-                <div class="p-6">
+                <div class="dashboard-card-body">
                     @if(class_exists('\Livewire\Component'))
                         @livewire('profile.update-password-form')
                     @else
                         <form method="POST" action="#">
-                            @csrf
-                            @method('put')
-                            
-                            <div class="space-y-4">
-                                <div>
-                                    <label for="current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Contraseña Actual
-                                    </label>
-                                    <input type="password" 
-                                           class="w-full px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 dark:focus:ring-yellow-400 focus:border-transparent transition-colors" 
-                                           id="current_password" 
-                                           name="current_password" 
-                                           required>
+                            @csrf @method('put')
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label-custom">Contraseña Actual</label>
+                                    <input type="password" name="current_password" class="form-input-custom" required>
                                 </div>
-                                
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Nueva Contraseña
-                                        </label>
-                                        <input type="password" 
-                                               class="w-full px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 dark:focus:ring-yellow-400 focus:border-transparent transition-colors" 
-                                               id="password" 
-                                               name="password" 
-                                               required>
-                                    </div>
-                                    
-                                    <div>
-                                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Confirmar Contraseña
-                                        </label>
-                                        <input type="password" 
-                                               class="w-full px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 dark:focus:ring-yellow-400 focus:border-transparent transition-colors" 
-                                               id="password_confirmation" 
-                                               name="password_confirmation" 
-                                               required>
-                                    </div>
+                                <div class="col-md-6">
+                                    <label class="form-label-custom">Nueva Contraseña</label>
+                                    <input type="password" name="password" class="form-input-custom" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label-custom">Confirmar Contraseña</label>
+                                    <input type="password" name="password_confirmation" class="form-input-custom" required>
                                 </div>
                             </div>
-                            
-                            <div class="flex justify-end mt-6">
-                                <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-400 dark:hover:bg-yellow-500 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-                                    Actualizar Contraseña
+                            <div class="d-flex justify-content-end mt-4">
+                                <button type="submit" class="save-btn warning">
+                                    <i class="bi bi-shield-lock me-2"></i>Actualizar Contraseña
                                 </button>
                             </div>
                         </form>
@@ -245,40 +163,131 @@
                 </div>
             </div>
 
-            <!-- Delete Account Section -->
-            <div class="bg-white dark:bg-gray-800 border border-red-200 dark:border-red-700/50 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="border-b border-red-200 dark:border-red-700 px-6 py-4 bg-red-50 dark:bg-red-900/50">
-                    <div class="flex items-center">
-                        <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z"/>
-                        </svg>
-                        <h3 class="text-lg font-semibold text-red-800 dark:text-red-200">Zona Peligrosa</h3>
-                    </div>
-                    <p class="text-sm text-red-700 dark:text-red-300 mt-1">Acciones irreversibles de tu cuenta</p>
+            {{-- Zona peligrosa --}}
+            <div class="dashboard-card danger-card">
+                <div class="dashboard-card-header danger-header">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Zona Peligrosa
+                    <span class="header-sub">Acciones irreversibles de tu cuenta</span>
                 </div>
-                <div class="p-6">
-                    <p class="text-gray-600 dark:text-gray-400 mb-4">
-                        Una vez que elimines tu cuenta, todos los recursos y datos serán eliminados permanentemente. 
-                        Esta acción no se puede deshacer.
-                    </p>
-                    
+                <div class="dashboard-card-body">
+                    <p class="danger-text">Una vez que elimines tu cuenta, todos los recursos y datos serán eliminados permanentemente. Esta acción no se puede deshacer.</p>
                     @if(class_exists('\Livewire\Component'))
                         @livewire('profile.delete-user-form')
                     @else
-                        <div class="bg-blue-50 dark:bg-blue-900/50 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
-                            <div class="flex items-center">
-                                <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                <div>
-                                    <p class="text-sm text-blue-800 dark:text-blue-200 font-medium">Información</p>
-                                    <p class="text-sm text-blue-700 dark:text-blue-300">Para eliminar tu cuenta, contacta al soporte técnico.</p>
-                                </div>
-                            </div>
+                        <div class="info-notice">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            Para eliminar tu cuenta, contacta al soporte técnico.
                         </div>
                     @endif
                 </div>
             </div>
+
         </div>
     </div>
+</div>
+
+<style>
+    .dashboard-welcome {
+        background: #fff; border-radius: 14px; padding: 1.5rem 2rem;
+        border: 1px solid #e9ecef; box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .welcome-title { font-size: 1.3rem; font-weight: 700; color: #1a1a2e; }
+    .welcome-sub { color: #888; font-size: 0.9rem; }
+
+    .btn-back {
+        display: inline-flex; align-items: center; padding: 0.5rem 1.2rem;
+        border-radius: 8px; background: #f1f3f5; color: #495057;
+        font-size: 0.88rem; font-weight: 600; text-decoration: none; transition: all 0.2s;
+    }
+    .btn-back:hover { background: #e9ecef; color: #333; }
+
+    .profile-avatar-lg {
+        width: 56px; height: 56px; border-radius: 50%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff; display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; font-weight: 700; flex-shrink: 0;
+    }
+    .profile-avatar-xl {
+        width: 72px; height: 72px; border-radius: 50%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff; display: flex; align-items: center; justify-content: center;
+        font-size: 2rem; font-weight: 700;
+    }
+    .profile-name { font-weight: 700; color: #1a1a2e; font-size: 1rem; margin-bottom: 0.2rem; }
+    .profile-email { color: #888; font-size: 0.85rem; }
+
+    .status-badge {
+        display: inline-flex; align-items: center;
+        padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 600;
+    }
+    .status-badge.verified { background: #f0fdf4; color: #16a34a; }
+    .status-badge.unverified { background: #fffbeb; color: #d97706; }
+
+    .dashboard-card {
+        background: #fff; border-radius: 14px;
+        border: 1px solid #e9ecef; box-shadow: 0 2px 12px rgba(0,0,0,0.05); overflow: hidden;
+    }
+    .dashboard-card-header {
+        padding: 1rem 1.5rem; font-weight: 700; font-size: 0.88rem; color: #495057;
+        border-bottom: 1px solid #f1f3f5; background: #fafafa;
+        text-transform: uppercase; letter-spacing: 0.5px;
+        display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+    }
+    .dashboard-card-header i { color: #667eea; }
+    .header-sub { font-size: 0.78rem; font-weight: 400; color: #aaa; text-transform: none; letter-spacing: 0; margin-left: auto; }
+    .dashboard-card-body { padding: 1.5rem; }
+
+    .account-info-item { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.6rem 0; border-bottom: 1px solid #f1f3f5; }
+    .account-info-item:last-child { border-bottom: none; }
+    .info-label { font-size: 0.75rem; color: #999; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+    .info-value { font-size: 0.92rem; color: #333; font-weight: 600; }
+    .stat-highlight { color: #667eea; font-size: 1.1rem; font-weight: 800; }
+    .stat-highlight.purple { color: #764ba2; }
+
+    .dashboard-action-item {
+        display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem;
+        border-radius: 10px; text-decoration: none; font-size: 0.88rem; font-weight: 500;
+        color: #495057; transition: all 0.2s;
+    }
+    .dashboard-action-item:hover { transform: translateX(3px); color: #333; }
+    .action-blue { background: #eff6ff; }
+    .action-blue:hover { background: #dbeafe; }
+    .action-purple { background: #f5f3ff; }
+    .action-purple:hover { background: #ede9fe; }
+
+    .form-label-custom {
+        display: block; font-size: 0.82rem; font-weight: 600; color: #444;
+        margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .form-input-custom {
+        width: 100%; padding: 0.8rem 1rem; border: 2px solid #e8e8ee;
+        border-radius: 10px; font-size: 0.95rem; color: #1a1a2e; background: #fafafa;
+        transition: all 0.2s; outline: none;
+    }
+    .form-input-custom:focus {
+        border-color: #667eea; background: #fff;
+        box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+    }
+
+    .save-btn {
+        display: inline-flex; align-items: center; padding: 0.7rem 1.5rem;
+        background: linear-gradient(135deg, #667eea, #764ba2); color: #fff;
+        border: none; border-radius: 10px; font-weight: 700; font-size: 0.9rem;
+        cursor: pointer; transition: all 0.25s;
+    }
+    .save-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(102,126,234,0.4); }
+    .save-btn.warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .save-btn.warning:hover { box-shadow: 0 6px 20px rgba(245,158,11,0.4); }
+
+    .danger-card { border-color: #fecaca; }
+    .danger-header { background: #fff5f5; color: #dc2626; border-bottom-color: #fecaca; }
+    .danger-header i { color: #dc2626; }
+    .danger-text { color: #666; font-size: 0.9rem; margin-bottom: 1rem; }
+
+    .info-notice {
+        background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px;
+        padding: 0.9rem 1.2rem; font-size: 0.88rem; color: #1d4ed8;
+        display: flex; align-items: center;
+    }
+</style>
 @endsection

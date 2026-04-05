@@ -11,18 +11,12 @@ new class extends Component
     public string $name = '';
     public string $email = '';
 
-    /**
-     * Mount the component.
-     */
     public function mount(): void
     {
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
     }
 
-    /**
-     * Update the profile information for the currently authenticated user.
-     */
     public function updateProfileInformation(): void
     {
         $user = Auth::user();
@@ -43,73 +37,72 @@ new class extends Component
         $this->dispatch('profile-updated', name: $user->name);
     }
 
-    /**
-     * Send an email verification notification to the current user.
-     */
     public function sendVerification(): void
     {
         $user = Auth::user();
 
         if ($user->hasVerifiedEmail()) {
             $this->redirectIntended(default: route('dashboard', absolute: false));
-
             return;
         }
 
         $user->sendEmailVerificationNotification();
-
         Session::flash('status', 'verification-link-sent');
     }
 }; ?>
 
-<section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Profile Information') }}
-        </h2>
+<div>
+    @if (session('status') === 'verification-link-sent')
+        <div class="profile-alert success mb-3">
+            <i class="bi bi-check-circle-fill me-2"></i>Se envió un nuevo enlace de verificación a tu correo.
+        </div>
+    @endif
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Update your account's profile information and email address.") }}
-        </p>
-    </header>
+    <form wire:submit="updateProfileInformation">
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label class="form-label-custom">Nombre</label>
+                <input type="text" wire:model="name" id="name" class="form-input-custom @error('name') is-invalid @enderror" required autofocus autocomplete="name">
+                @error('name') <span class="invalid-msg">{{ $message }}</span> @enderror
+            </div>
+            <div class="col-md-6">
+                <label class="form-label-custom">Correo Electrónico</label>
+                <input type="email" wire:model="email" id="email" class="form-input-custom @error('email') is-invalid @enderror" required autocomplete="username">
+                @error('email') <span class="invalid-msg">{{ $message }}</span> @enderror
 
-    <form wire:submit="updateProfileInformation" class="mt-6 space-y-6">
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input wire:model="name" id="name" name="name" type="text" class="mt-1 block w-full" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! auth()->user()->hasVerifiedEmail())
+                    <div class="mt-2">
+                        <span class="unverified-note">Tu email no está verificado.</span>
+                        <button wire:click.prevent="sendVerification" class="resend-link">Reenviar verificación</button>
+                    </div>
+                @endif
+            </div>
         </div>
 
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
-
-            @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! auth()->user()->hasVerifiedEmail())
-                <div>
-                    <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                        {{ __('Your email address is unverified.') }}
-
-                        <button wire:click.prevent="sendVerification" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </button>
-                    </p>
-
-                    @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
-                            {{ __('A new verification link has been sent to your email address.') }}
-                        </p>
-                    @endif
-                </div>
-            @endif
-        </div>
-
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
-
-            <x-action-message class="me-3" on="profile-updated">
-                {{ __('Saved.') }}
+        <div class="d-flex align-items-center gap-3">
+            <button type="submit" class="save-btn">
+                <i class="bi bi-check-lg me-2"></i>Guardar Cambios
+            </button>
+            <span wire:loading wire:target="updateProfileInformation" class="saving-text">Guardando...</span>
+            <x-action-message on="profile-updated">
+                <span class="saved-text"><i class="bi bi-check-circle-fill me-1"></i>Guardado</span>
             </x-action-message>
         </div>
     </form>
-</section>
+
+<style>
+    .form-label-custom { display: block; font-size: 0.82rem; font-weight: 600; color: #444; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-input-custom { width: 100%; padding: 0.8rem 1rem; border: 2px solid #e8e8ee; border-radius: 10px; font-size: 0.95rem; color: #1a1a2e; background: #fafafa; transition: all 0.2s; outline: none; }
+    .form-input-custom:focus { border-color: #667eea; background: #fff; box-shadow: 0 0 0 4px rgba(102,126,234,0.1); }
+    .form-input-custom.is-invalid { border-color: #ef4444; }
+    .invalid-msg { font-size: 0.8rem; color: #ef4444; margin-top: 0.4rem; display: block; }
+    .save-btn { display: inline-flex; align-items: center; padding: 0.7rem 1.5rem; background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border: none; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.25s; }
+    .save-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(102,126,234,0.4); }
+    .saving-text { font-size: 0.85rem; color: #888; }
+    .saved-text { font-size: 0.85rem; color: #16a34a; font-weight: 600; }
+    .unverified-note { font-size: 0.82rem; color: #d97706; }
+    .resend-link { background: none; border: none; color: #667eea; font-size: 0.82rem; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0; margin-left: 4px; }
+    .profile-alert { padding: 0.8rem 1rem; border-radius: 10px; font-size: 0.88rem; font-weight: 500; display: flex; align-items: center; }
+    .profile-alert.success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+</style>
+</div>

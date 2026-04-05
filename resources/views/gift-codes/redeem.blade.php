@@ -1,138 +1,257 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('title', 'Canjear Código de Regalo')
 
-@section('page-title', 'Canjear Código de Regalo')
-
 @section('content')
-    <!-- Header -->
-    <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-2">Canjear Código de Regalo</h1>
-        <p class="text-gray-600 dark:text-gray-400">Ingresa tu código para obtener días VIP</p>
-    </div>
+<div class="container py-4" style="min-height: calc(100vh - 200px);">
 
-    <!-- User Info Card -->
-    <div class="max-w-md mx-auto mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-blue-500">
-            <div class="flex items-center mb-4">
-                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center">
-                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                    </svg>
+    {{-- Header --}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="dashboard-welcome">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div>
+                        <h4 class="welcome-title mb-1"><i class="bi bi-gift-fill me-2" style="color:#667eea;"></i>Canjear Código de Regalo</h4>
+                        <p class="welcome-sub mb-0">Ingresa tu código para obtener días VIP</p>
+                    </div>
+                    <a href="{{ route('dashboard') }}" class="btn-back">
+                        <i class="bi bi-arrow-left me-1"></i> Volver al Dashboard
+                    </a>
                 </div>
-                <div class="ml-4">
-                    <h3 class="font-semibold text-gray-800 dark:text-gray-200">{{ $user->name }}</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ $user->email }}</p>
-                </div>
-            </div>
-
-            <!-- VIP Status -->
-            <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-                <div class="flex items-center justify-between">
-                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Estado VIP:</span>
-                    @if($vipStatus['is_active'])
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
-                            Activo ({{ $vipStatus['days_remaining'] }} días restantes)
-                        </span>
-                    @else
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                            </svg>
-                            Inactivo
-                        </span>
-                    @endif
-                </div>
-                @if($vipStatus['is_active'] && $vipStatus['expires_at'])
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                        Expira el {{ $vipStatus['expires_at']->format('d/m/Y H:i') }}
-                    </p>
-                @endif
             </div>
         </div>
     </div>
 
-    <!-- Redeem Form -->
-    <div class="max-w-md mx-auto">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-            <form method="POST" action="{{ route('gift-codes.redeem.process') }}">
-                @csrf
-                
-                <div class="mb-6">
-                    <label for="code" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Código de Regalo
-                    </label>
-                    <div class="relative">
-                        <input 
-                            type="text" 
-                            name="code" 
-                            id="code" 
-                            placeholder="Ingresa tu código aquí"
-                            value="{{ old('code') }}"
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent uppercase tracking-widest text-center font-mono text-lg @error('code') border-red-500 @enderror"
-                            maxlength="20"
-                            required
-                        >
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                            <svg class="w-5 h-5 text-gray-400 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                            </svg>
+    <div class="row justify-content-center g-4">
+
+        {{-- Info del usuario --}}
+        <div class="col-md-4">
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <i class="bi bi-person-fill me-2"></i>Tu Cuenta
+                </div>
+                <div class="dashboard-card-body">
+                    <div class="user-avatar-wrap">
+                        <div class="user-avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+                        <div>
+                            <div class="user-name">{{ $user->name }}</div>
+                            <div class="user-email">{{ $user->email }}</div>
                         </div>
                     </div>
-                    @error('code')
-                        <p class="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center">
-                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                            </svg>
-                            {{ $message }}
-                        </p>
-                    @enderror
+
+                    <div class="divider"></div>
+
+                    <div class="account-info-item">
+                        <span class="info-label"><i class="bi bi-patch-check me-1"></i>Estado VIP</span>
+                        @if($vipStatus['is_active'])
+                            <span class="status-badge active"><i class="bi bi-check-circle-fill me-1"></i>Activo — {{ $vipStatus['days_remaining'] }} días</span>
+                        @else
+                            <span class="status-badge inactive"><i class="bi bi-x-circle-fill me-1"></i>Inactivo</span>
+                        @endif
+                    </div>
+
+                    @if($vipStatus['is_active'] && $vipStatus['expires_at'])
+                        <div class="account-info-item">
+                            <span class="info-label"><i class="bi bi-calendar me-1"></i>Expira el</span>
+                            <span class="info-value">{{ $vipStatus['expires_at']->format('d/m/Y H:i') }}</span>
+                        </div>
+                    @endif
+
+                    <div class="divider"></div>
+
+                    <a href="{{ route('gift-codes.my-redemptions') }}" class="dashboard-link-item mt-2">
+                        <i class="bi bi-clock-history me-2"></i>Ver mis canjes
+                        <i class="bi bi-arrow-right ms-auto"></i>
+                    </a>
                 </div>
-
-                <button 
-                    type="submit"
-                    class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold text-lg transition-all duration-200 hover:from-blue-700 hover:to-purple-700 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-700 transform hover:scale-105"
-                >
-                    <span class="flex items-center justify-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
-                        </svg>
-                        Canjear Código
-                    </span>
-                </button>
-            </form>
-
-            <!-- Help Text -->
-            <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">¿Cómo funciona?</h4>
-                <ul class="text-xs text-gray-600 dark:text-gray-400 space-y-1">
-                    <li>• Los códigos son de un solo uso por usuario</li>
-                    <li>• El tiempo VIP se suma a tu membresía actual</li>
-                    <li>• Los códigos pueden tener fecha de expiración</li>
-                </ul>
             </div>
         </div>
-    </div>
 
-    <!-- Navigation Links -->
-    <div class="max-w-md mx-auto mt-6 text-center space-x-4">
-        <a href="{{ route('dashboard') }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-            ← Volver al Dashboard
-        </a>
-        <span class="text-gray-400 dark:text-gray-600">|</span>
-        <a href="{{ route('gift-codes.my-redemptions') }}" class="text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 transition-colors">
-            Mis Canjes →
-        </a>
+        {{-- Formulario --}}
+        <div class="col-md-6">
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <i class="bi bi-key-fill me-2"></i>Ingresar Código
+                </div>
+                <div class="dashboard-card-body">
+
+                    @if(session('success'))
+                        <div class="alert-custom success mb-4">
+                            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert-custom error mb-4">
+                            <i class="bi bi-exclamation-circle-fill me-2"></i>{{ session('error') }}
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('gift-codes.redeem.process') }}">
+                        @csrf
+                        <div class="code-input-wrap">
+                            <label class="auth-label">Código de Regalo</label>
+                            <input
+                                type="text"
+                                name="code"
+                                id="code"
+                                placeholder="XXXXXXXXXX"
+                                value="{{ old('code') }}"
+                                class="code-input @error('code') is-invalid @enderror"
+                                maxlength="20"
+                                required
+                            >
+                            @error('code')
+                                <span class="invalid-msg">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <button type="submit" class="redeem-btn">
+                            <i class="bi bi-gift me-2"></i>Canjear Código
+                        </button>
+                    </form>
+
+                    <div class="help-box mt-4">
+                        <div class="help-title"><i class="bi bi-info-circle me-2"></i>¿Cómo funciona?</div>
+                        <ul class="help-list">
+                            <li>Los códigos son de un solo uso por usuario</li>
+                            <li>El tiempo VIP se suma a tu membresía actual</li>
+                            <li>Los códigos pueden tener fecha de expiración</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+</div>
+
+<style>
+    .dashboard-welcome {
+        background: #fff;
+        border-radius: 14px;
+        padding: 1.5rem 2rem;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .welcome-title { font-size: 1.3rem; font-weight: 700; color: #1a1a2e; }
+    .welcome-sub { color: #888; font-size: 0.9rem; }
+
+    .btn-back {
+        display: inline-flex; align-items: center;
+        padding: 0.5rem 1.2rem;
+        border-radius: 8px;
+        background: #f1f3f5;
+        color: #495057;
+        font-size: 0.88rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .btn-back:hover { background: #e9ecef; color: #333; }
+
+    .dashboard-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+    .dashboard-card-header {
+        padding: 1rem 1.5rem;
+        font-weight: 700;
+        font-size: 0.88rem;
+        color: #495057;
+        border-bottom: 1px solid #f1f3f5;
+        background: #fafafa;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .dashboard-card-header i { color: #667eea; }
+    .dashboard-card-body { padding: 1.5rem; }
+
+    .user-avatar-wrap { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    .user-avatar {
+        width: 48px; height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.3rem; font-weight: 700;
+        flex-shrink: 0;
+    }
+    .user-name { font-weight: 700; color: #1a1a2e; font-size: 0.95rem; }
+    .user-email { color: #888; font-size: 0.82rem; }
+
+    .divider { height: 1px; background: #f1f3f5; margin: 1rem 0; }
+
+    .account-info-item { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.75rem; }
+    .info-label { font-size: 0.78rem; color: #999; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+    .info-value { font-size: 0.9rem; color: #333; font-weight: 500; }
+
+    .status-badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; }
+    .status-badge.active { background: #f0fdf4; color: #16a34a; }
+    .status-badge.inactive { background: #f8f9fa; color: #888; }
+
+    .dashboard-link-item {
+        display: flex; align-items: center;
+        padding: 0.7rem 1rem;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 0.88rem; font-weight: 500;
+        color: #667eea;
+        background: #f8f9ff;
+        transition: all 0.2s;
+    }
+    .dashboard-link-item:hover { background: #eff1ff; transform: translateX(3px); }
+
+    .auth-label {
+        display: block; font-size: 0.82rem; font-weight: 600; color: #444;
+        margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .code-input-wrap { margin-bottom: 1.25rem; }
+    .code-input {
+        width: 100%; padding: 1rem;
+        border: 2px solid #e8e8ee; border-radius: 10px;
+        font-size: 1.4rem; font-weight: 700; letter-spacing: 6px;
+        text-align: center; text-transform: uppercase;
+        color: #1a1a2e; background: #fafafa;
+        transition: all 0.2s; outline: none;
+        font-family: 'Courier New', monospace;
+    }
+    .code-input:focus { border-color: #667eea; background: #fff; box-shadow: 0 0 0 4px rgba(102,126,234,0.1); }
+    .code-input.is-invalid { border-color: #ef4444; }
+    .invalid-msg { font-size: 0.8rem; color: #ef4444; margin-top: 0.4rem; display: block; }
+
+    .redeem-btn {
+        width: 100%; padding: 0.9rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff; border: none; border-radius: 10px;
+        font-size: 1rem; font-weight: 700; cursor: pointer;
+        transition: all 0.25s;
+    }
+    .redeem-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(102,126,234,0.4); }
+
+    .help-box {
+        background: #f8f9ff; border-radius: 10px;
+        padding: 1rem 1.25rem; border: 1px solid #e8ecff;
+    }
+    .help-title { font-size: 0.88rem; font-weight: 700; color: #667eea; margin-bottom: 0.6rem; }
+    .help-list { margin: 0; padding-left: 1rem; }
+    .help-list li { font-size: 0.82rem; color: #666; margin-bottom: 0.3rem; }
+
+    .alert-custom {
+        padding: 0.8rem 1rem; border-radius: 10px;
+        font-size: 0.88rem; font-weight: 500;
+        display: flex; align-items: center;
+    }
+    .alert-custom.success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .alert-custom.error { background: #fff5f5; color: #dc2626; border: 1px solid #fecaca; }
+</style>
+
+<script>
+    document.getElementById('code').addEventListener('input', function(e) {
+        e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    });
+</script>
 @endsection
-
-@push('scripts')
-    <script>
-        document.getElementById('code').addEventListener('input', function(e) {
-            e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-        });
-    </script>
-@endpush

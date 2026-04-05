@@ -35,32 +35,73 @@ new #[Layout('layouts.guest')] class extends Component
 
 <div>
     <div class="auth-card">
+
         <div class="auth-card-title">Crear cuenta</div>
         <div class="auth-card-subtitle">Únete a Firepaste hoy, es gratis</div>
 
         <form wire:submit="register">
+            <!-- Nombre -->
             <div class="auth-field">
                 <label for="name" class="auth-label">Nombre</label>
-                <input type="text" wire:model="name" id="name" class="auth-input @error('name') is-invalid @enderror" placeholder="Tu nombre" required autofocus autocomplete="name">
-                @error('name') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                <input
+                    type="text"
+                    wire:model="name"
+                    id="name"
+                    class="auth-input @error('name') is-invalid @enderror"
+                    placeholder="Tu nombre"
+                    required autofocus autocomplete="name"
+                >
+                @error('name')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
             </div>
 
+            <!-- Email -->
             <div class="auth-field">
                 <label for="email" class="auth-label">Correo Electrónico</label>
-                <input type="email" wire:model="email" id="email" class="auth-input @error('email') is-invalid @enderror" placeholder="tu@correo.com" required autocomplete="username">
-                @error('email') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                <input
+                    type="email"
+                    wire:model="email"
+                    id="email"
+                    class="auth-input @error('email') is-invalid @enderror"
+                    placeholder="tu@correo.com"
+                    required autocomplete="username"
+                >
+                @error('email')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
             </div>
 
+            <!-- Contraseña -->
             <div class="auth-field">
                 <label for="password" class="auth-label">Contraseña</label>
-                <input type="password" wire:model="password" id="password" class="auth-input @error('password') is-invalid @enderror" placeholder="Mínimo 8 caracteres" required autocomplete="new-password">
-                @error('password') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                <input
+                    type="password"
+                    wire:model="password"
+                    id="password"
+                    class="auth-input @error('password') is-invalid @enderror"
+                    placeholder="Mínimo 8 caracteres"
+                    required autocomplete="new-password"
+                >
+                @error('password')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
             </div>
 
+            <!-- Confirmar Contraseña -->
             <div class="auth-field">
                 <label for="password_confirmation" class="auth-label">Confirmar Contraseña</label>
-                <input type="password" wire:model="password_confirmation" id="password_confirmation" class="auth-input @error('password_confirmation') is-invalid @enderror" placeholder="Repite tu contraseña" required autocomplete="new-password">
-                @error('password_confirmation') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                <input
+                    type="password"
+                    wire:model="password_confirmation"
+                    id="password_confirmation"
+                    class="auth-input @error('password_confirmation') is-invalid @enderror"
+                    placeholder="Repite tu contraseña"
+                    required autocomplete="new-password"
+                >
+                @error('password_confirmation')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
             </div>
 
             <button type="submit" class="auth-btn" style="margin-top:0.5rem;">
@@ -71,6 +112,6 @@ new #[Layout('layouts.guest')] class extends Component
     </div>
 
     <div class="auth-footer">
-        ¿Ya tienes cuenta? <a href="{{ route('login') }}" wire:navigate>Inicia sesión</a>
+        ¿Ya tienes cuenta? <a href="{{ route('login') }}">Inicia sesión</a>
     </div>
 </div>

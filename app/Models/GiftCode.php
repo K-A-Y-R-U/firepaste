@@ -89,10 +89,6 @@ class GiftCode extends Model
     // ✅ Canje atómico — resuelve la race condition
     public function redeem(User $user): GiftCodeRedemption
     {
-        // lockForUpdate() bloquea la fila en BD.
-        // Si dos usuarios intentan canjear al mismo tiempo,
-        // el segundo espera y cuando obtiene el lock
-        // ya no cumple used_count < max_uses → falla correctamente.
         $locked = static::where('id', $this->id)
             ->where('is_active', true)
             ->where(function ($q) {
@@ -151,6 +147,11 @@ class GiftCode extends Model
             if (!$model->created_by && auth('admin')->check()) {
                 $model->created_by = auth('admin')->id();
             }
+        });
+
+        // Eliminar canjes relacionados antes de borrar el código
+        static::deleting(function ($giftCode) {
+            $giftCode->redemptions()->delete();
         });
     }
 }
