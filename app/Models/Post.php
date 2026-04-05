@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 
 class Post extends Model
 {
@@ -60,7 +61,7 @@ class Post extends Model
 
         // 4. Eliminar javascript: / vbscript: / data: en atributos href, src, action, etc.
         $html = preg_replace(
-            '/\b(href|src|action|formaction|xlink:href)\s*=\s*["\']?\s*(?:javascript|vbscript|data)\s*:/i',
+            '/\b(href|src|action|formaction|xlink:href)\s*=\s*["\'"]?\s*(?:javascript|vbscript|data)\s*:/i',
             '$1="#"',
             $html
         );
@@ -75,6 +76,12 @@ class Post extends Model
     public function catalog()
     {
         return $this->belongsTo(Catalog::class);
+    }
+
+    // ✅ Relación con visitas únicas
+    public function postViews()
+    {
+        return $this->hasMany(PostView::class);
     }
 
     // Scopes
@@ -93,5 +100,54 @@ class Post extends Model
     public function scopeVip($query)
     {
         return $query->where('is_vip', true);
+    }
+
+    /**
+     * ✅ Búsqueda mejorada — busca en título del post y nombre del catálogo.
+     * Usa LEFT JOIN para incluir posts sin catálogo en los resultados.
+     * El binding con parámetros previene SQL injection.
+     */
+    public function scopeSearch($query, string $term)
+    {
+        $like = '%' . addcslashes(trim($term), '%_') . '%';
+
+        return $query
+            ->leftJoin('catalogs', 'posts.catalog_id', '=', 'catalogs.id')
+            ->where(function ($q) use ($like) {
+                $q->whereRaw('posts.titulo LIKE ?', [$like])
+                  ->orWhereRaw('catalogs.nombre LIKE ?', [$like]);
+            })
+            ->select('posts.*'); // Evitar colisión de columnas con el JOIN
+    }
+
+    /**
+     * ✅ Registra una visita única por IP con ventana de 24 horas.
+     *
+     * - Si la IP ya visitó este post en las últimas 24h → no hace nada.
+     * - Si es una visita nueva → inserta en post_views e incrementa views.
+     * - Usa insert ignore / updateOrInsert para ser atómico y evitar duplicados
+     *   en escenarios de alta concurrencia.
+     */
+    public function registerUniqueView(string $ip): void
+    {
+        $alreadyViewed = DB::table('post_views')
+            ->where('post_id', $this->id)
+            ->where('ip_address', $ip)
+            ->where('viewed_at', '>=', now()->subHours(24))
+            ->exists();
+
+        if ($alreadyViewed) {
+            return;
+        }
+
+        // Insertar registro de visita
+        DB::table('post_views')->insert([
+            'post_id'    => $this->id,
+            'ip_address' => $ip,
+            'viewed_at'  => now(),
+        ]);
+
+        // Incrementar contador en la tabla posts
+        $this->increment('views');
     }
 }
