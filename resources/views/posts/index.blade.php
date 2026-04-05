@@ -421,69 +421,86 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Dropdown de ordenamiento
+// Referencias globales para poder remover listeners correctamente
+let _closeDropdowns = null;
+let _handleEscape = null;
+
+function initDropdowns() {
+    // Remover listeners globales anteriores si existen
+    if (_closeDropdowns) document.removeEventListener('click', _closeDropdowns);
+    if (_handleEscape) document.removeEventListener('keydown', _handleEscape);
+
+    // Clonar botones para eliminar listeners duplicados acumulados
+    const sortTriggerOld = document.getElementById('sortDropdown');
+    const categoryTriggerOld = document.getElementById('categoryDropdown');
+
+    if (sortTriggerOld) {
+        const clone = sortTriggerOld.cloneNode(true);
+        sortTriggerOld.parentNode.replaceChild(clone, sortTriggerOld);
+    }
+    if (categoryTriggerOld) {
+        const clone = categoryTriggerOld.cloneNode(true);
+        categoryTriggerOld.parentNode.replaceChild(clone, categoryTriggerOld);
+    }
+
+    // Re-seleccionar elementos después del clone
     const sortDropdown = document.querySelector('#sortDropdown')?.closest('.dropdown-custom');
     const sortTrigger = document.getElementById('sortDropdown');
     const sortMenu = document.getElementById('sortMenu');
-    
-    if (sortDropdown && sortTrigger && sortMenu) {
+    const categoryDropdown = document.querySelector('#categoryDropdown')?.closest('.dropdown-custom');
+    const categoryTrigger = document.getElementById('categoryDropdown');
+    const categoryMenu = document.getElementById('categoryMenu');
+
+    // Listener del dropdown "Ordenar por"
+    if (sortTrigger && sortDropdown) {
         sortTrigger.addEventListener('click', function(e) {
             e.stopPropagation();
-            // Cerrar el otro dropdown si está abierto
             categoryDropdown?.classList.remove('open');
             sortDropdown.classList.toggle('open');
         });
     }
-    
-    // Dropdown de categorías
-    const categoryDropdown = document.querySelector('#categoryDropdown')?.closest('.dropdown-custom');
-    const categoryTrigger = document.getElementById('categoryDropdown');
-    const categoryMenu = document.getElementById('categoryMenu');
-    
-    if (categoryDropdown && categoryTrigger && categoryMenu) {
+
+    // Listener del dropdown "Categoría"
+    if (categoryTrigger && categoryDropdown) {
         categoryTrigger.addEventListener('click', function(e) {
             e.stopPropagation();
-            // Cerrar el otro dropdown si está abierto
             sortDropdown?.classList.remove('open');
             categoryDropdown.classList.toggle('open');
         });
     }
-    
-    // Cerrar al hacer clic fuera
-    document.addEventListener('click', function(e) {
+
+    // Cerrar al hacer click fuera
+    _closeDropdowns = function(e) {
         if (sortDropdown && !sortDropdown.contains(e.target)) {
             sortDropdown.classList.remove('open');
         }
         if (categoryDropdown && !categoryDropdown.contains(e.target)) {
             categoryDropdown.classList.remove('open');
         }
-    });
-    
-    // Cerrar con ESC
-    document.addEventListener('keydown', function(e) {
+    };
+
+    // Cerrar con tecla Escape
+    _handleEscape = function(e) {
         if (e.key === 'Escape') {
             sortDropdown?.classList.remove('open');
             categoryDropdown?.classList.remove('open');
         }
+    };
+
+    document.addEventListener('click', _closeDropdowns);
+    document.addEventListener('keydown', _handleEscape);
+
+    // Cerrar al seleccionar una opción
+    sortMenu?.addEventListener('click', function(e) {
+        if (e.target.closest('a')) sortDropdown?.classList.remove('open');
     });
-    
-    // Cerrar al hacer clic en un enlace
-    if (sortMenu) {
-        sortMenu.addEventListener('click', function(e) {
-            if (e.target.tagName === 'A') {
-                sortDropdown?.classList.remove('open');
-            }
-        });
-    }
-    
-    if (categoryMenu) {
-        categoryMenu.addEventListener('click', function(e) {
-            if (e.target.tagName === 'A') {
-                categoryDropdown?.classList.remove('open');
-            }
-        });
-    }
-});
+
+    categoryMenu?.addEventListener('click', function(e) {
+        if (e.target.closest('a')) categoryDropdown?.classList.remove('open');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initDropdowns);
+document.addEventListener('livewire:navigated', initDropdowns);
 </script>
 @endsection
