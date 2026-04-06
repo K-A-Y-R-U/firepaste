@@ -216,6 +216,107 @@
     font-size: 0.7rem;
 }
 
+/* Paginación responsive */
+.pagination {
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
+}
+
+.pagination .page-item .page-link {
+    border-radius: 8px !important;
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    min-width: 38px;
+    text-align: center;
+}
+
+@media (max-width: 576px) {
+    .pagination .page-item:not(.active):not(:first-child):not(:last-child):not(.disabled) {
+        display: none;
+    }
+
+    /* Mostrar solo: anterior, actual ±1, siguiente */
+    .pagination .page-item.active,
+    .pagination .page-item.active + .page-item,
+    .pagination .page-item:has(+ .page-item.active),
+    .pagination .page-item:first-child,
+    .pagination .page-item:last-child {
+        display: flex !important;
+    }
+
+    .pagination .page-item .page-link {
+        font-size: 0.85rem;
+        padding: 6px 10px;
+        min-width: 36px;
+    }
+}
+
+/* Paginación custom */
+.custom-pagination {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1.5px solid #dee2e6;
+    background: #fff;
+    color: #495057;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.page-btn:hover:not(.disabled):not(.active):not(.dots) {
+    border-color: #667eea;
+    color: #667eea;
+    background: #eef0fd;
+    transform: translateY(-1px);
+}
+
+.page-btn.active {
+    background: #667eea;
+    border-color: #667eea;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(102,126,234,0.4);
+}
+
+.page-btn.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    background: #f8f9fa;
+}
+
+.page-btn.dots {
+    border: none;
+    background: transparent;
+    cursor: default;
+    color: #aaa;
+    font-size: 1rem;
+}
+
+@media (max-width: 576px) {
+    .page-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 0.85rem;
+        border-radius: 9px;
+    }
+}
+
 @media (max-width: 768px) {
     .row.g-3 { gap: 1rem !important; }
     .dropdown-toggle-custom { padding: 10px 14px; font-size: 0.9rem; }
