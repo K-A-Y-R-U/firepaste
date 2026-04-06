@@ -337,6 +337,8 @@
 }
 </style>
 
+@endsection
+
 @section('scripts')
 <script>
 let _closeDropdowns = null;
@@ -409,5 +411,4 @@ document.addEventListener('DOMContentLoaded', initDropdowns);
 document.addEventListener('livewire:navigated', initDropdowns);
 document.addEventListener('livewire:updated', initDropdowns);
 </script>
-@endsection
 @endsection

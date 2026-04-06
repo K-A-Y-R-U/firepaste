@@ -22,9 +22,14 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         View::composer(['layouts.header', 'layouts.footer', 'livewire.header', 'posts.show', 'vip.show'], function ($view) {
-            $settings = GeneralSetting::first();
-            $siteName = $settings ? $settings->site_name : config('app.name', 'Laravel');
-            $moreConfigs = $settings ? json_decode($settings->more_configs, true) : [];
+            try {
+                $settings = GeneralSetting::first();
+                $siteName = $settings?->site_name ?? config('app.name', 'Firepaste');
+                $moreConfigs = $settings ? (json_decode($settings->more_configs, true) ?? []) : [];
+            } catch (\Exception $e) {
+                $siteName = config('app.name', 'Firepaste');
+                $moreConfigs = [];
+            }
 
             $view->with('siteName', $siteName)
                  ->with('moreConfigs', $moreConfigs);

@@ -18,7 +18,7 @@
     {{-- ✅ Admin Bar — solo visible para admins logueados --}}
     <x-admin-bar-admin-bar />
 
-    <livewire:header />
+    @include('layouts.header')
 
     <main>
         @yield('content')

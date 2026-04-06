@@ -162,32 +162,24 @@
                     @endif
 
                     {{-- Números inteligentes --}}
-                    @php
-                        $current = $posts->currentPage();
-                        $last    = $posts->lastPage();
-                        $dotsPrinted = false;
-                    @endphp
-
-                    @for($p = 1; $p <= $last; $p++)
+                    @foreach(range(1, $posts->lastPage()) as $p)
                         @php
-                            $near = abs($p - $current) <= 2;
-                            $isFirst = $p === 1;
-                            $isLast  = $p === $last;
-                            $show    = $isFirst || $isLast || $near;
+                            $near     = abs($p - $posts->currentPage()) <= 2;
+                            $isFirst  = $p === 1;
+                            $isLast   = $p === $posts->lastPage();
+                            $show     = $isFirst || $isLast || $near;
                         @endphp
 
                         @if($show)
-                            @php $dotsPrinted = false; @endphp
-                            @if($p === $current)
+                            @if($p === $posts->currentPage())
                                 <span class="page-btn active">{{ $p }}</span>
                             @else
                                 <button wire:click="gotoPage({{ $p }})" class="page-btn">{{ $p }}</button>
                             @endif
-                        @elseif(!$dotsPrinted)
-                            @php $dotsPrinted = true; @endphp
+                        @elseif($p === 2 || $p === $posts->lastPage() - 1)
                             <span class="page-btn dots">···</span>
                         @endif
-                    @endfor
+                    @endforeach
 
                     {{-- Siguiente --}}
                     @if($posts->hasMorePages())
