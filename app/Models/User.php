@@ -121,7 +121,7 @@ class User extends Authenticatable
 
     public function removeRole(string $roleName): void
     {
-        $role = DB::table('hexa_roles')->where('name', $roleName)->first();;
+        $role = DB::table('hexa_roles')->where('name', $roleName)->first();
 
         if ($role) {
             DB::table('user_roles')

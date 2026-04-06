@@ -145,7 +145,7 @@
             </div>
         @endforelse
 
-        {{-- Paginación custom con Livewire --}}
+        {{-- Paginación --}}
         @if($posts->hasPages())
             <div class="d-flex justify-content-center mt-4">
                 <nav class="custom-pagination">
@@ -156,35 +156,42 @@
                             <i class="bi bi-chevron-left"></i>
                         </span>
                     @else
-                        <button wire:click="previousPage('page')" class="page-btn">
+                        <button wire:click="previousPage" class="page-btn">
                             <i class="bi bi-chevron-left"></i>
                         </button>
                     @endif
 
-                    {{-- Números de página inteligentes --}}
+                    {{-- Números inteligentes --}}
                     @php
                         $current = $posts->currentPage();
                         $last    = $posts->lastPage();
+                        $dotsPrinted = false;
                     @endphp
 
                     @for($p = 1; $p <= $last; $p++)
-                        @php $near = abs($p - $current) <= 1; @endphp
-                        @if($p === 1 || $p === $last || $near)
+                        @php
+                            $near = abs($p - $current) <= 2;
+                            $isFirst = $p === 1;
+                            $isLast  = $p === $last;
+                            $show    = $isFirst || $isLast || $near;
+                        @endphp
+
+                        @if($show)
+                            @php $dotsPrinted = false; @endphp
                             @if($p === $current)
                                 <span class="page-btn active">{{ $p }}</span>
                             @else
-                                <button wire:click="gotoPage($p, 'page')" class="page-btn">{{ $p }}</button>
+                                <button wire:click="gotoPage({{ $p }})" class="page-btn">{{ $p }}</button>
                             @endif
-                        @elseif($p === 2 && $current > 3)
-                            <span class="page-btn dots"><i class="bi bi-three-dots"></i></span>
-                        @elseif($p === $last - 1 && $current < $last - 2)
-                            <span class="page-btn dots"><i class="bi bi-three-dots"></i></span>
+                        @elseif(!$dotsPrinted)
+                            @php $dotsPrinted = true; @endphp
+                            <span class="page-btn dots">···</span>
                         @endif
                     @endfor
 
                     {{-- Siguiente --}}
                     @if($posts->hasMorePages())
-                        <button wire:click="nextPage('page')" class="page-btn">
+                        <button wire:click="nextPage" class="page-btn">
                             <i class="bi bi-chevron-right"></i>
                         </button>
                     @else
