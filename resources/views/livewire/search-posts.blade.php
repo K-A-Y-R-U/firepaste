@@ -101,31 +101,31 @@
     <div wire:loading.class="opacity-50">
         @forelse($posts as $post)
             <div class="col-md-12 mt-2">
-                <div class="card paste">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center gap-3">
-                            <div class="flex-grow-1">
-                                <a href="{{ route('posts.show', $post->id) }}" class="text-decoration-none">
-                                    <h6 class="card-title card-sky mb-0">
-                                        <strong>{{ $post->titulo }}</strong>
-                                    </h6>
-                                </a>
-                                @if($post->catalog)
-                                    <span class="post-catalog-badge mt-1">
-                                        <i class="bi bi-folder2 me-1"></i>{{ $post->catalog->nombre }}
-                                    </span>
-                                @endif
-                            </div>
-                            <div class="post-views">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                                    <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-                                </svg>
-                                <span>{{ number_format($post->views) }}</span>
+                <a href="{{ route('posts.show', $post->id) }}" class="text-decoration-none">
+                    <div class="card paste card-hoverable">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center gap-3">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                                        <h6 class="card-title card-sky mb-0"><strong>{{ $post->titulo }}</strong></h6>
+                                        @if($post->catalog)
+                                            <span class="post-catalog-badge">
+                                                <i class="bi bi-folder2 me-1"></i>{{ $post->catalog->nombre }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="post-views">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                                    </svg>
+                                    <span>{{ number_format($post->views) }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         @empty
             <div class="col-md-12 mt-2">

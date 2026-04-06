@@ -174,6 +174,18 @@
     font-weight: 600;
 }
 
+/* Card clickeable */
+.card-hoverable {
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    cursor: pointer;
+}
+
+.card-hoverable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.15);
+    border-color: #b3bcf5;
+}
+
 .opacity-50 {
     opacity: 0.5;
     transition: opacity 0.2s ease;
@@ -184,13 +196,24 @@
     display: inline-flex;
     align-items: center;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 600;
     color: #667eea;
-    background: rgba(102, 126, 234, 0.08);
-    border: 1px solid rgba(102, 126, 234, 0.25);
-    border-radius: 20px;
-    padding: 2px 10px;
-    margin-top: 4px;
+    background: #eef0fd;
+    border: 1.5px solid #b3bcf5;
+    border-radius: 6px;
+    padding: 3px 10px;
+    margin-left: 10px;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+}
+
+.post-catalog-badge:hover {
+    background: #dde1fb;
+}
+
+.post-catalog-badge i {
+    color: #667eea;
+    font-size: 0.7rem;
 }
 
 @media (max-width: 768px) {
