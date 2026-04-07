@@ -14,8 +14,10 @@ class Header extends Component
     public function mount()
     {
         $settings = GeneralSetting::first();
-        $this->siteName = $settings ? $settings->site_name : config('app.name', 'Laravel');
-        $this->moreConfigs = $settings ? json_decode($settings->more_configs, true) : [];
+        $this->siteName = $settings?->site_name ?? config('app.name', 'Laravel');
+
+        // ✅ Seguro ante null y JSON malformado
+        $this->moreConfigs = json_decode($settings->more_configs ?? '[]', true) ?? [];
     }
 
     public function logout()
