@@ -30,16 +30,16 @@
                     </ul>
                     
                     <div class="tab-content border border-tertiary rounded-bottom-2 border-top-0 p-0">
-                        <div class="tab-pane show active p-2 p-md-3" id="tab_content1" role="tabpanel" aria-labelledby="tab_content1" tabindex="0">
+                        <div class="tab-pane show active p-2 p-md-3" id="tab_content1" role="tabpanel" tabindex="0">
                             <div class="content-wrapper">
                                 {!! $post->contenido !!}
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="tab_content2" role="tabpanel" aria-labelledby="tab_content2" tabindex="0"></div>
-                        <div class="tab-pane fade" id="tab_content3" role="tabpanel" aria-labelledby="tab_content3" tabindex="0"></div>
                     </div>
                     
-                    <div class="my-3 my-md-4 text-end">
+                    {{-- Footer: botón reportar izquierda + visitas derecha --}}
+                    <div class="my-3 my-md-4 d-flex align-items-center justify-content-between gap-3">
+                        <livewire:report-post :postId="$post->id" :key="'report-'.$post->id" />
                         <div class="visitas-box d-inline-flex align-items-center gap-2 text-dark">
                             <i class="bi bi-eye"></i> 
                             <span>Visitas: <strong>{{ $post->views }}</strong></span>
@@ -118,7 +118,6 @@
         const isEnabled = @json($moreConfigs['url_shortener_enabled'] ?? false);
 
         if (!isEnabled) return;
-
         if (!configApiUrl || configApiUrl.trim() === "") return;
 
         const apiUrl = configApiUrl;
@@ -127,7 +126,6 @@
 
         links.forEach(link => {
             const originalUrl = link.href;
-
             if (originalUrl.includes(siteHost)) return;
 
             fetch(`${apiUrl}${encodeURIComponent(originalUrl)}`)
@@ -136,13 +134,9 @@
                     return response.json();
                 })
                 .then(data => {
-                    if (data.shortenedUrl) {
-                        link.href = data.shortenedUrl;
-                    }
+                    if (data.shortenedUrl) link.href = data.shortenedUrl;
                 })
-                .catch(error => {
-                    console.error('Error al acortar la URL:', error);
-                });
+                .catch(error => console.error('Error al acortar la URL:', error));
 
             link.addEventListener('click', (e) => {
                 e.preventDefault();
