@@ -56,7 +56,7 @@
     "¡Bienvenido,": "Welcome,",
     "Sin membresía": "No membership required",
     "Estado VIP:": "VIP Status:",
-    "ACTIVO": "ASSET",
+    "ACTIVO": "ACTIVE",
     "INACTIVO": "INACTIVE",
     "días restantes — Expira:": "Days remaining — Expires:",
     "Activa tu membresía para acceder a contenido exclusivo": "Activate your membership to access exclusive content",
@@ -72,5 +72,6 @@
     "Editar Perfil": "Edit Profile",
     "Explorar Contenido": "Explore Content",
     "Contenido VIP": "VIP Content",
-    "Aquí tienes un resumen de tu cuenta": "Here is a summary of your account"
+    "Aquí tienes un resumen de tu cuenta": "Here is a summary of your account",
+    "VIP ACTIVO": "VIP ACTIVE"
 }
