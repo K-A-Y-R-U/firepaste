@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Editar Perfil - ' . Auth::user()->name)
+@section('title', __('Editar Perfil') . ' - ' . Auth::user()->name)
 
 @section('content')
 @php $vipStatus = Auth::user()->getVipStatus(); @endphp
@@ -16,11 +16,11 @@
                         <div class="profile-avatar-lg">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
                         <div>
                             <h4 class="welcome-title mb-1">{{ Auth::user()->name }}</h4>
-                            <p class="welcome-sub mb-0">Miembro desde {{ Auth::user()->created_at->format('M Y') }}</p>
+                            <p class="welcome-sub mb-0">{{ __('Miembro desde') }} {{ Auth::user()->created_at->format('M Y') }}</p>
                         </div>
                     </div>
                     <a href="{{ route('dashboard') }}" class="btn-back">
-                        <i class="bi bi-arrow-left me-1"></i> Dashboard
+                        <i class="bi bi-arrow-left me-1"></i> {{ __('Dashboard') }}
                     </a>
                 </div>
             </div>
@@ -35,7 +35,7 @@
             {{-- Info usuario --}}
             <div class="dashboard-card mb-4">
                 <div class="dashboard-card-header">
-                    <i class="bi bi-person-fill me-2"></i>Mi Cuenta
+                    <i class="bi bi-person-fill me-2"></i>{{ __('Mi Cuenta') }}
                 </div>
                 <div class="dashboard-card-body text-center">
                     <div class="profile-avatar-xl mx-auto mb-3">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
@@ -43,9 +43,9 @@
                     <div class="profile-email mb-3">{{ Auth::user()->email }}</div>
 
                     @if(Auth::user()->email_verified_at)
-                        <span class="status-badge verified"><i class="bi bi-patch-check-fill me-1"></i>Email Verificado</span>
+                        <span class="status-badge verified"><i class="bi bi-patch-check-fill me-1"></i>{{ __('Email Verificado') }}</span>
                     @else
-                        <span class="status-badge unverified"><i class="bi bi-exclamation-circle-fill me-1"></i>Email No Verificado</span>
+                        <span class="status-badge unverified"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ __('Email No Verificado') }}</span>
                     @endif
                 </div>
             </div>
@@ -53,21 +53,21 @@
             {{-- Estadísticas --}}
             <div class="dashboard-card mb-4">
                 <div class="dashboard-card-header">
-                    <i class="bi bi-bar-chart-fill me-2"></i>Estadísticas
+                    <i class="bi bi-bar-chart-fill me-2"></i>{{ __('Estadísticas') }}
                 </div>
                 <div class="dashboard-card-body">
                     <div class="account-info-item">
-                        <span class="info-label"><i class="bi bi-calendar me-1"></i>Días como miembro</span>
+                        <span class="info-label"><i class="bi bi-calendar me-1"></i>{{ __('Días como miembro') }}</span>
                         <span class="info-value stat-highlight">{{ Auth::user()->created_at->diffInDays(now()) }}</span>
                     </div>
                     <div class="account-info-item">
-                        <span class="info-label"><i class="bi bi-gift me-1"></i>Códigos canjeados</span>
+                        <span class="info-label"><i class="bi bi-gift me-1"></i>{{ __('Códigos canjeados') }}</span>
                         <span class="info-value stat-highlight purple">{{ Auth::user()->giftCodeRedemptions()->count() }}</span>
                     </div>
                     <div class="account-info-item">
-                        <span class="info-label"><i class="bi bi-star me-1"></i>Estado VIP</span>
+                        <span class="info-label"><i class="bi bi-star me-1"></i>{{ __('Estado VIP') }}</span>
                         <span class="info-value {{ $vipStatus['is_active'] ? 'text-success' : '' }}">
-                            {{ $vipStatus['is_active'] ? 'Activo' : 'Inactivo' }}
+                            {{ $vipStatus['is_active'] ? __('Activo') : __('Inactivo') }}
                         </span>
                     </div>
                 </div>
@@ -76,15 +76,15 @@
             {{-- Acciones rápidas --}}
             <div class="dashboard-card">
                 <div class="dashboard-card-header">
-                    <i class="bi bi-lightning-charge-fill me-2"></i>Acciones Rápidas
+                    <i class="bi bi-lightning-charge-fill me-2"></i>{{ __('Acciones Rápidas') }}
                 </div>
                 <div class="dashboard-card-body">
                     <a href="{{ route('gift-codes.redeem') }}" class="dashboard-action-item action-blue mb-2">
-                        <i class="bi bi-gift me-2"></i><span>Canjear Código</span>
+                        <i class="bi bi-gift me-2"></i><span>{{ __('Canjear Código') }}</span>
                         <i class="bi bi-chevron-right ms-auto"></i>
                     </a>
                     <a href="{{ route('gift-codes.my-redemptions') }}" class="dashboard-action-item action-purple">
-                        <i class="bi bi-clock-history me-2"></i><span>Mis Canjes</span>
+                        <i class="bi bi-clock-history me-2"></i><span>{{ __('Mis Canjes') }}</span>
                         <i class="bi bi-chevron-right ms-auto"></i>
                     </a>
                 </div>
@@ -98,8 +98,8 @@
             {{-- Información personal --}}
             <div class="dashboard-card mb-4">
                 <div class="dashboard-card-header">
-                    <i class="bi bi-person-vcard-fill me-2"></i>Información Personal
-                    <span class="header-sub">Actualiza tu nombre y correo electrónico</span>
+                    <i class="bi bi-person-vcard-fill me-2"></i>{{ __('Información Personal') }}
+                    <span class="header-sub">{{ __('Actualiza tu nombre y correo electrónico') }}</span>
                 </div>
                 <div class="dashboard-card-body">
                     @if(class_exists('\Livewire\Component'))
@@ -109,17 +109,17 @@
                             @csrf @method('patch')
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label-custom">Nombre Completo</label>
+                                    <label class="form-label-custom">{{ __('Nombre') }}</label>
                                     <input type="text" name="name" class="form-input-custom" value="{{ old('name', Auth::user()->name) }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label-custom">Correo Electrónico</label>
+                                    <label class="form-label-custom">{{ __('Correo Electrónico') }}</label>
                                     <input type="email" name="email" class="form-input-custom" value="{{ old('email', Auth::user()->email) }}" required>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end mt-4">
                                 <button type="submit" class="save-btn">
-                                    <i class="bi bi-check-lg me-2"></i>Guardar Cambios
+                                    <i class="bi bi-check-lg me-2"></i>{{ __('Guardar Cambios') }}
                                 </button>
                             </div>
                         </form>
@@ -130,8 +130,8 @@
             {{-- Cambiar contraseña --}}
             <div class="dashboard-card mb-4">
                 <div class="dashboard-card-header">
-                    <i class="bi bi-lock-fill me-2"></i>Cambiar Contraseña
-                    <span class="header-sub">Usa una contraseña larga y segura</span>
+                    <i class="bi bi-lock-fill me-2"></i>{{ __('Cambiar Contraseña') }}
+                    <span class="header-sub">{{ __('Usa una contraseña larga y segura') }}</span>
                 </div>
                 <div class="dashboard-card-body">
                     @if(class_exists('\Livewire\Component'))
@@ -141,21 +141,21 @@
                             @csrf @method('put')
                             <div class="row g-3">
                                 <div class="col-12">
-                                    <label class="form-label-custom">Contraseña Actual</label>
+                                    <label class="form-label-custom">{{ __('Contraseña Actual') }}</label>
                                     <input type="password" name="current_password" class="form-input-custom" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label-custom">Nueva Contraseña</label>
+                                    <label class="form-label-custom">{{ __('Nueva Contraseña') }}</label>
                                     <input type="password" name="password" class="form-input-custom" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label-custom">Confirmar Contraseña</label>
+                                    <label class="form-label-custom">{{ __('Confirmar Contraseña') }}</label>
                                     <input type="password" name="password_confirmation" class="form-input-custom" required>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end mt-4">
                                 <button type="submit" class="save-btn warning">
-                                    <i class="bi bi-shield-lock me-2"></i>Actualizar Contraseña
+                                    <i class="bi bi-shield-lock me-2"></i>{{ __('Actualizar Contraseña') }}
                                 </button>
                             </div>
                         </form>
@@ -166,17 +166,17 @@
             {{-- Zona peligrosa --}}
             <div class="dashboard-card danger-card">
                 <div class="dashboard-card-header danger-header">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Zona Peligrosa
-                    <span class="header-sub">Acciones irreversibles de tu cuenta</span>
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ __('Zona Peligrosa') }}
+                    <span class="header-sub">{{ __('Acciones irreversibles de tu cuenta') }}</span>
                 </div>
                 <div class="dashboard-card-body">
-                    <p class="danger-text">Una vez que elimines tu cuenta, todos los recursos y datos serán eliminados permanentemente. Esta acción no se puede deshacer.</p>
+                    <p class="danger-text">{{ __('Una vez que elimines tu cuenta, todos los recursos y datos serán eliminados permanentemente. Esta acción no se puede deshacer.') }}</p>
                     @if(class_exists('\Livewire\Component'))
                         @livewire('profile.delete-user-form')
                     @else
                         <div class="info-notice">
                             <i class="bi bi-info-circle-fill me-2"></i>
-                            Para eliminar tu cuenta, contacta al soporte técnico.
+                            {{ __('Para eliminar tu cuenta, contacta al soporte técnico.') }}
                         </div>
                     @endif
                 </div>

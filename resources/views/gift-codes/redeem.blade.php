@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Canjear Código de Regalo')
+@section('title', __('Canjear Código de Regalo'))
 
 @section('content')
 <div class="container py-4" style="min-height: calc(100vh - 200px);">
@@ -11,11 +11,11 @@
             <div class="dashboard-welcome">
                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                     <div>
-                        <h4 class="welcome-title mb-1"><i class="bi bi-gift-fill me-2" style="color:#667eea;"></i>Canjear Código de Regalo</h4>
-                        <p class="welcome-sub mb-0">Ingresa tu código para obtener días VIP</p>
+                        <h4 class="welcome-title mb-1"><i class="bi bi-gift-fill me-2" style="color:#667eea;"></i>{{ __('Canjear Código de Regalo') }}</h4>
+                        <p class="welcome-sub mb-0">{{ __('Ingresa tu código para obtener días VIP') }}</p>
                     </div>
                     <a href="{{ route('dashboard') }}" class="btn-back">
-                        <i class="bi bi-arrow-left me-1"></i> Volver al Dashboard
+                        <i class="bi bi-arrow-left me-1"></i> {{ __('Volver al Dashboard') }}
                     </a>
                 </div>
             </div>
@@ -28,7 +28,7 @@
         <div class="col-md-4">
             <div class="dashboard-card">
                 <div class="dashboard-card-header">
-                    <i class="bi bi-person-fill me-2"></i>Tu Cuenta
+                    <i class="bi bi-person-fill me-2"></i>{{ __('Tu Cuenta') }}
                 </div>
                 <div class="dashboard-card-body">
                     <div class="user-avatar-wrap">
@@ -42,17 +42,17 @@
                     <div class="divider"></div>
 
                     <div class="account-info-item">
-                        <span class="info-label"><i class="bi bi-patch-check me-1"></i>Estado VIP</span>
+                        <span class="info-label"><i class="bi bi-patch-check me-1"></i>{{ __('Estado VIP') }}</span>
                         @if($vipStatus['is_active'])
-                            <span class="status-badge active"><i class="bi bi-check-circle-fill me-1"></i>Activo — {{ $vipStatus['days_remaining'] }} días</span>
+                            <span class="status-badge active"><i class="bi bi-check-circle-fill me-1"></i>{{ __('Activo') }} — {{ $vipStatus['days_remaining'] }} {{ __('días') }}</span>
                         @else
-                            <span class="status-badge inactive"><i class="bi bi-x-circle-fill me-1"></i>Inactivo</span>
+                            <span class="status-badge inactive"><i class="bi bi-x-circle-fill me-1"></i>{{ __('Inactivo') }}</span>
                         @endif
                     </div>
 
                     @if($vipStatus['is_active'] && $vipStatus['expires_at'])
                         <div class="account-info-item">
-                            <span class="info-label"><i class="bi bi-calendar me-1"></i>Expira el</span>
+                            <span class="info-label"><i class="bi bi-calendar me-1"></i>{{ __('Expira el') }}</span>
                             <span class="info-value">{{ $vipStatus['expires_at']->format('d/m/Y H:i') }}</span>
                         </div>
                     @endif
@@ -60,7 +60,7 @@
                     <div class="divider"></div>
 
                     <a href="{{ route('gift-codes.my-redemptions') }}" class="dashboard-link-item mt-2">
-                        <i class="bi bi-clock-history me-2"></i>Ver mis canjes
+                        <i class="bi bi-clock-history me-2"></i>{{ __('Ver mis canjes') }}
                         <i class="bi bi-arrow-right ms-auto"></i>
                     </a>
                 </div>
@@ -71,7 +71,7 @@
         <div class="col-md-6">
             <div class="dashboard-card">
                 <div class="dashboard-card-header">
-                    <i class="bi bi-key-fill me-2"></i>Ingresar Código
+                    <i class="bi bi-key-fill me-2"></i>{{ __('Ingresar Código') }}
                 </div>
                 <div class="dashboard-card-body">
 
@@ -90,7 +90,7 @@
                     <form method="POST" action="{{ route('gift-codes.redeem.process') }}">
                         @csrf
                         <div class="code-input-wrap">
-                            <label class="auth-label">Código de Regalo</label>
+                            <label class="auth-label">{{ __('Código de Regalo') }}</label>
                             <input
                                 type="text"
                                 name="code"
@@ -107,16 +107,16 @@
                         </div>
 
                         <button type="submit" class="redeem-btn">
-                            <i class="bi bi-gift me-2"></i>Canjear Código
+                            <i class="bi bi-gift me-2"></i>{{ __('Canjear Código') }}
                         </button>
                     </form>
 
                     <div class="help-box mt-4">
-                        <div class="help-title"><i class="bi bi-info-circle me-2"></i>¿Cómo funciona?</div>
+                        <div class="help-title"><i class="bi bi-info-circle me-2"></i>{{ __('¿Cómo funciona?') }}</div>
                         <ul class="help-list">
-                            <li>Los códigos son de un solo uso por usuario</li>
-                            <li>El tiempo VIP se suma a tu membresía actual</li>
-                            <li>Los códigos pueden tener fecha de expiración</li>
+                            <li>{{ __('Los códigos son de un solo uso por usuario') }}</li>
+                            <li>{{ __('El tiempo VIP se suma a tu membresía actual') }}</li>
+                            <li>{{ __('Los códigos pueden tener fecha de expiración') }}</li>
                         </ul>
                     </div>
                 </div>
