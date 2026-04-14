@@ -7,14 +7,14 @@
                 type="text"
                 wire:model.live.debounce.400ms="search"
                 class="form-control search-input"
-                placeholder="Buscar..."
+                placeholder="{{ __('Buscar') }}"
                 aria-label="Buscar..."
                 aria-describedby="button-buscar"
             >
             <span class="input-group-text bg-white border-start-0 border-end-0 px-1" wire:loading>
                 <span class="spinner-border spinner-border-sm text-secondary" role="status"></span>
             </span>
-            <button type="button" class="btn btn-main search-btn" id="button-buscar">Buscar</button>
+            <button type="button" class="btn btn-main search-btn" id="button-buscar">{{ __('Buscar') }}</button>
         </div>
     </div>
 
@@ -25,12 +25,16 @@
             {{-- Ordenar por --}}
             <div class="col-md-6">
                 <label class="filter-label mb-2">
-                    <i class="bi bi-sort-down me-2"></i>Ordenar por
+                    <i class="bi bi-sort-down me-2"></i>{{ __('Ordenar por') }}
                 </label>
                 <div class="dropdown-custom">
                     <button type="button" class="dropdown-toggle-custom" id="sortDropdown">
                         <span class="dropdown-value">
-                            @if($sort === 'most_viewed') Lo más visto @else Más reciente @endif
+                            @if($sort === 'most_viewed')
+                                {{ __('Lo mas visto') }}
+                            @else
+                                {{ __('Más reciente') }}
+                            @endif
                         </span>
                         <i class="bi bi-chevron-down dropdown-arrow"></i>
                     </button>
@@ -38,7 +42,7 @@
                         <div class="dropdown-item-custom {{ $sort !== 'most_viewed' ? 'active' : '' }}"
                              wire:click="$set('sort', '')">
                             <i class="bi bi-clock-fill"></i>
-                            <span>Más reciente</span>
+                            <span>{{ __('Más reciente') }}</span>
                             @if($sort !== 'most_viewed')
                                 <i class="bi bi-check-circle-fill ms-auto text-success"></i>
                             @endif
@@ -46,7 +50,7 @@
                         <div class="dropdown-item-custom {{ $sort === 'most_viewed' ? 'active' : '' }}"
                              wire:click="$set('sort', 'most_viewed')">
                             <i class="bi bi-eye-fill"></i>
-                            <span>Lo más visto</span>
+                            <span>{{ __('Lo mas visto') }}</span>
                             @if($sort === 'most_viewed')
                                 <i class="bi bi-check-circle-fill ms-auto text-success"></i>
                             @endif
@@ -58,15 +62,15 @@
             {{-- Filtrar por categoría --}}
             <div class="col-md-6">
                 <label class="filter-label mb-2">
-                    <i class="bi bi-funnel-fill me-2"></i>Filtrar por categoría
+                    <i class="bi bi-funnel-fill me-2"></i>{{ __('Filtrar por categoría') }}
                 </label>
                 <div class="dropdown-custom">
                     <button type="button" class="dropdown-toggle-custom" id="categoryDropdown">
                         <span class="dropdown-value">
                             @if($catalog)
-                                {{ $catalogs->where('slug', $catalog)->first()->nombre ?? 'Todas las categorías' }}
+                                {{ $catalogs->where('slug', $catalog)->first()->nombre ?? __('Todas las categorías') }}
                             @else
-                                Todas las categorías
+                                {{ __('Todas las categorías') }}
                             @endif
                         </span>
                         <i class="bi bi-chevron-down dropdown-arrow"></i>
@@ -75,7 +79,7 @@
                         <div class="dropdown-item-custom {{ !$catalog ? 'active' : '' }}"
                              wire:click="$set('catalog', '')">
                             <i class="bi bi-grid-fill"></i>
-                            <span>Todas las categorías</span>
+                            <span>{{ __('Todas las categorías') }}</span>
                             @if(!$catalog)
                                 <i class="bi bi-check-circle-fill ms-auto text-success"></i>
                             @endif
@@ -131,14 +135,14 @@
             <div class="col-md-12 mt-2">
                 <div class="text-center py-5">
                     <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
-                    <h5 class="text-muted mt-3">No se encontraron posts</h5>
+                    <h5 class="text-muted mt-3">{{ __('No se encontraron posts') }}</h5>
                     <p class="text-muted">
                         @if($search)
-                            No hay resultados para "{{ $search }}"
+                            {{ __('No hay resultados para') }} "{{ $search }}"
                         @elseif($catalog)
-                            No hay posts en este catálogo
+                            {{ __('No hay posts en este catálogo') }}
                         @else
-                            Aún no hay posts publicados
+                            {{ __('Aún no hay posts publicados') }}
                         @endif
                     </p>
                 </div>

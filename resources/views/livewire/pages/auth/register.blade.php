@@ -36,13 +36,13 @@ new #[Layout('layouts.guest')] class extends Component
 <div>
     <div class="auth-card">
 
-        <div class="auth-card-title">Crear cuenta</div>
-        <div class="auth-card-subtitle">Únete a Firepaste hoy, es gratis</div>
+        <div class="auth-card-title">{{ __("Crear cuenta") }}</div>
+        <div class="auth-card-subtitle">{{ __("unete a Firepaste hoy, es gratis") }}</div>
 
         <form wire:submit="register">
             <!-- Nombre -->
             <div class="auth-field">
-                <label for="name" class="auth-label">Nombre</label>
+                <label for="name" class="auth-label">{{ __("Nombre") }}</label>
                 <input
                     type="text"
                     wire:model="name"
@@ -58,7 +58,7 @@ new #[Layout('layouts.guest')] class extends Component
 
             <!-- Email -->
             <div class="auth-field">
-                <label for="email" class="auth-label">Correo Electrónico</label>
+                <label for="email" class="auth-label">{{ __("Correo Electrónico") }}</label>
                 <input
                     type="email"
                     wire:model="email"
@@ -74,7 +74,7 @@ new #[Layout('layouts.guest')] class extends Component
 
             <!-- Contraseña -->
             <div class="auth-field">
-                <label for="password" class="auth-label">Contraseña</label>
+                <label for="password" class="auth-label">{{ __("Contrasena") }}</label>
                 <input
                     type="password"
                     wire:model="password"
@@ -90,7 +90,7 @@ new #[Layout('layouts.guest')] class extends Component
 
             <!-- Confirmar Contraseña -->
             <div class="auth-field">
-                <label for="password_confirmation" class="auth-label">Confirmar Contraseña</label>
+                <label for="password_confirmation" class="auth-label">{{ __("Confirmar Contrasena") }}</label>
                 <input
                     type="password"
                     wire:model="password_confirmation"
@@ -105,13 +105,13 @@ new #[Layout('layouts.guest')] class extends Component
             </div>
 
             <button type="submit" class="auth-btn" style="margin-top:0.5rem;">
-                <span wire:loading.remove wire:target="register">Crear Cuenta</span>
-                <span wire:loading wire:target="register">Creando cuenta...</span>
+                <span wire:loading.remove wire:target="register">{{ __("Crear cuenta") }}</span>
+                <span wire:loading wire:target="register">{{ __("Creando cuenta...") }}</span>
             </button>
         </form>
     </div>
 
     <div class="auth-footer">
-        ¿Ya tienes cuenta? <a href="{{ route('login') }}">Inicia sesión</a>
+        {{ __("¿Ya tienes cuenta?") }} <a href="{{ route('login') }}">{{ __("Inicia sesion") }}</a>
     </div>
 </div>

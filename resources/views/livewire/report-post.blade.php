@@ -200,7 +200,7 @@
     {{-- Botón reportar --}}
     <button wire:click="openModal" class="report-btn">
         <i class="bi bi-flag-fill"></i>
-        <span>Reportar</span>
+        <span>{{ __("Reportar") }}</span>
     </button>
 
     {{-- Modal --}}
@@ -210,7 +210,7 @@
 
                 <div class="report-modal-header">
                     <p class="report-modal-title">
-                        <i class="bi bi-flag-fill text-danger me-2"></i>Reportar problema
+                        <i class="bi bi-flag-fill text-danger me-2"></i>{{ __("Reportar problema") }}
                     </p>
                     <button wire:click="closeModal" class="report-close-btn">
                         <i class="bi bi-x-lg"></i>
@@ -222,9 +222,9 @@
                         {{-- Éxito --}}
                         <div class="text-center py-2">
                             <i class="bi bi-check-circle-fill text-success" style="font-size: 2.8rem;"></i>
-                            <h6 class="mt-3 fw-bold">¡Reporte enviado!</h6>
-                            <p class="text-muted small mb-4">Gracias por ayudarnos a mejorar el contenido.</p>
-                            <button wire:click="closeModal" class="report-btn-cancel px-4">Cerrar</button>
+                            <h6 class="mt-3 fw-bold">{{ __("¡Reporte enviado!") }}</h6>
+                            <p class="text-muted small mb-4">{{ __("Gracias por ayudarnos a mejorar el contenido.") }}</p>
+                            <button wire:click="closeModal" class="report-btn-cancel px-4">{{ __("Cerrar") }}</button>
                         </div>
                     @else
                         @if($errorMsg)
@@ -234,28 +234,28 @@
                         @endif
 
                         {{-- Motivos --}}
-                        <label class="report-label">Motivo del reporte</label>
+                        <label class="report-label">{{ __("Motivo del reporte") }}</label>
                         <div class="report-options mb-3">
 
                             <div class="report-option {{ $reason === 'link_caido' ? 'is-selected' : '' }}"
                                  wire:click="$set('reason', 'link_caido')">
                                 <div class="report-option-radio"></div>
                                 <i class="bi bi-link-45deg report-option-icon"></i>
-                                <span>Enlace caído</span>
+                                <span>{{ __("Enlace caído") }}</span>
                             </div>
 
                             <div class="report-option {{ $reason === 'contenido_incorrecto' ? 'is-selected' : '' }}"
                                  wire:click="$set('reason', 'contenido_incorrecto')">
                                 <div class="report-option-radio"></div>
                                 <i class="bi bi-x-circle report-option-icon"></i>
-                                <span>Contenido incorrecto</span>
+                                <span>{{ __("Contenido incorrecto") }}</span>
                             </div>
 
                             <div class="report-option {{ $reason === 'otro' ? 'is-selected' : '' }}"
                                  wire:click="$set('reason', 'otro')">
                                 <div class="report-option-radio"></div>
                                 <i class="bi bi-chat-dots report-option-icon"></i>
-                                <span>Otro</span>
+                                <span>{{ __("Otro") }}</span>
                             </div>
 
                         </div>
@@ -264,11 +264,11 @@
                         @enderror
 
                         {{-- Descripción --}}
-                        <label class="report-label">Descripción <span class="text-muted fw-normal normal-case" style="text-transform:none;">(opcional)</span></label>
+                        <label class="report-label">{{ __("Descripción") }} <span class="text-muted fw-normal normal-case" style="text-transform:none;">({{ __("opcional") }})</span></label>
                         <textarea
                             wire:model="description"
                             class="form-control report-textarea"
-                            placeholder="Describe el problema con más detalle..."
+                            placeholder="{{ __("Describe el problema con más detalle...") }}"
                             maxlength="500"
                             rows="3"
                         ></textarea>
@@ -278,13 +278,13 @@
 
                         {{-- Acciones --}}
                         <div class="report-actions">
-                            <button wire:click="closeModal" class="report-btn-cancel">Cancelar</button>
+                            <button wire:click="closeModal" class="report-btn-cancel">{{ __("Cancelar") }}</button>
                             <button wire:click="submit" class="report-btn-submit" wire:loading.attr="disabled">
                                 <span wire:loading.remove wire:target="submit">
-                                    <i class="bi bi-flag-fill"></i> Enviar reporte
+                                    <i class="bi bi-flag-fill"></i> {{ __("Enviar reporte") }}
                                 </span>
                                 <span wire:loading wire:target="submit">
-                                    <span class="spinner-border spinner-border-sm"></span> Enviando...
+                                    <span class="spinner-border spinner-border-sm"></span> {{ __("Enviando...") }}
                                 </span>
                             </button>
                         </div>

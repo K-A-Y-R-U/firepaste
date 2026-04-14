@@ -10,8 +10,8 @@
             <div class="row justify-content-center">
                 <div class="col-lg-7 text-center">
                     <div class="section-title">
-                        <h2 class="text-white">Nuestros Precios</h2>
-                        <h3 class="mt-3 text-white">Sin Cargos Ocultos. Elige tu Plan Perfecto</h3>
+                        <h2 class="text-white">{{ __('Nuestros Precios') }}</h2>
+                        <h3 class="mt-3 text-white">{{ __('Sin Cargos Ocultos. Elige tu Plan Perfecto') }}</h3>
                     </div>
                 </div>
             </div>
@@ -36,15 +36,15 @@
                                     </div>
                                     <h1>${{ $plan['price'] }}</h1>
                                     <div class="dias d-flex justify-content-center">
-                                        <p class="text-muted">{{ $plan['days'] }} días</p>
+                                        <p class="text-muted">{{ $plan['days'] }} {{ __('días') }}</p>
                                     </div>
                                 </div>
-                                <strong>Incluye:</strong>
+                                <strong>{{ __('Incluye:') }}</strong>
                                 <ul class="list-unstyled lh-45 mt-3 text-black">
-                                    <li>- Accede a todo el contenido del sitio!</li>
-                                    <li>- Sin Anuncios Molestos</li>
+                                    <li>- {{ __('Accede a todo el contenido del sitio!') }}</li>
+                                    <li>- {{ __('Sin Anuncios Molestos') }}</li>
                                 </ul>
-                                <a href="{{ url('/usuario/cuenta/membresias/comprar/' . $plan['id']) }}" class="btn btn-small btn-solid-border mt-3 btn-round-full">Comprar</a>
+                                <a href="{{ url('/usuario/cuenta/membresias/comprar/' . $plan['id']) }}" class="btn btn-small btn-solid-border mt-3 btn-round-full">{{ __('Comprar') }}</a>
                             </div>
                         </div>
                     </div>

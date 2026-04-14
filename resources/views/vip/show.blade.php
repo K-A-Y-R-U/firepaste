@@ -42,7 +42,7 @@
                         <livewire:report-post :postId="$post->id" :key="'report-vip-'.$post->id" />
                         <div class="visitas-box d-inline-flex align-items-center gap-2 text-dark">
                             <i class="bi bi-eye"></i> 
-                            <span>Visitas: <strong>{{ $post->views }}</strong></span>
+                            <span>{{ __("Visitas:") }} <strong>{{ $post->views }}</strong></span>
                         </div>
                     </div>
                 </div>

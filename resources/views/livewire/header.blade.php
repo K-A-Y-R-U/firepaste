@@ -15,15 +15,15 @@
                         <div class="collapse navbar-collapse text-center" id="navbarsExample09">
                             <ul class="navbar-nav ml-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ url('/') }}" wire:navigate>Inicio</a>
+                                    <a class="nav-link" href="{{ url('/') }}" wire:navigate>{{ __('Inicio') }}</a>
                                 </li>
 
                                 @guest
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('login') }}" wire:navigate>Iniciar sesión</a>
+                                        <a class="nav-link" href="{{ route('login') }}" wire:navigate>{{ __('Iniciar Sesion') }}</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('register') }}" wire:navigate>Registrarse</a>
+                                        <a class="nav-link" href="{{ route('register') }}" wire:navigate>{{ __('Registrarse') }}</a>
                                     </li>
                                 @else
                                     <li class="nav-item dropdown">
@@ -31,16 +31,33 @@
                                             {{ Auth::user()->name }}
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="userDropdown">
-                                            <a class="dropdown-item" href="{{ url('dashboard') }}">Mi Cuenta</a>
-                                            <a class="dropdown-item" href="#" wire:click="logout">Cerrar sesión</a>
+                                            <a class="dropdown-item" href="{{ url('dashboard') }}">{{ __('Mi Cuenta') }}</a>
+                                            <a class="dropdown-item" href="#" wire:click="logout">{{ __('Cerrar sesion') }}</a>
                                         </div>
                                     </li>
                                 @endguest
+
+                                {{-- ✅ Selector de idioma --}}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                                        {{ app()->getLocale() === 'es' ? '🇪🇸 ES' : '🇺🇸 EN' }}
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item {{ app()->getLocale() === 'es' ? 'active' : '' }}"
+                                           href="{{ route('lang.switch', 'es') }}">
+                                            🇪🇸 Español
+                                        </a>
+                                        <a class="dropdown-item {{ app()->getLocale() === 'en' ? 'active' : '' }}"
+                                           href="{{ route('lang.switch', 'en') }}">
+                                            🇺🇸 English
+                                        </a>
+                                    </div>
+                                </li>
                             </ul>
 
                             <div class="my-2 my-md-0 ml-lg-4 text-center">
-                                <a href="{{ url('/memberships') }}" class="btn btn-solid-border btn-round-full">Membresías</a>
-                            </div>     
+                                <a href="{{ url('/memberships') }}" class="btn btn-solid-border btn-round-full">{{ __('Membresías') }}</a>
+                            </div>
                         </div>
                     </nav>
                 </div>

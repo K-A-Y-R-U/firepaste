@@ -6,6 +6,12 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\VipPostController;
 use App\Http\Controllers\GiftCodeController;
 use App\Http\Controllers\MembresiaController;
+use App\Http\Controllers\LanguageController;
+
+// ✅ Ruta para cambiar idioma — sin tocar las demás URLs
+Route::get('/lang/{locale}', [LanguageController::class, 'switch'])
+    ->name('lang.switch')
+    ->where('locale', 'es|en');
 
 // Rutas públicas
 Route::get('/', [PostController::class, 'index'])->name('home');

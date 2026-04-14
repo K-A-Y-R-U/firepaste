@@ -21,8 +21,8 @@ new #[Layout('layouts.guest')] class extends Component
 <div>
     <div class="auth-card">
 
-        <div class="auth-card-title">Bienvenido de nuevo</div>
-        <div class="auth-card-subtitle">Ingresa a tu cuenta para continuar</div>
+        <div class="auth-card-title">{{ __("Bienvenido de nuevo") }}</div>
+        <div class="auth-card-subtitle">{{ __("Ingresa a tu cuenta para continuar") }}</div>
 
         @if (session('status'))
             <div class="auth-alert">{{ session('status') }}</div>
@@ -31,7 +31,7 @@ new #[Layout('layouts.guest')] class extends Component
         <form wire:submit="login">
             <!-- Email -->
             <div class="auth-field">
-                <label for="email" class="auth-label">Correo Electrónico</label>
+                <label for="email" class="auth-label">{{ __("Correo Electrónico") }}</label>
                 <input
                     type="email"
                     wire:model="form.email"
@@ -47,7 +47,7 @@ new #[Layout('layouts.guest')] class extends Component
 
             <!-- Contraseña -->
             <div class="auth-field">
-                <label for="password" class="auth-label">Contraseña</label>
+                <label for="password" class="auth-label">{{ __("Contrasena") }}</label>
                 <input
                     type="password"
                     wire:model="form.password"
@@ -65,23 +65,23 @@ new #[Layout('layouts.guest')] class extends Component
             <div class="d-flex justify-content-between align-items-center mb-3" style="margin-bottom:1.5rem;">
                 <div class="auth-check" style="margin-bottom:0;">
                     <input type="checkbox" wire:model="form.remember" id="remember">
-                    <label for="remember">Recordarme</label>
+                    <label for="remember">{{ __("Recordarme") }}</label>
                 </div>
                 @if (Route::has('password.request'))
                     <div class="auth-forgot" style="margin-bottom:0;">
-                        <a href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
+                        <a href="{{ route('password.request') }}">{{ __("¿Olvidaste tu contraseña?") }}</a>
                     </div>
                 @endif
             </div>
 
             <button type="submit" class="auth-btn">
-                <span wire:loading.remove wire:target="login">Iniciar Sesión</span>
-                <span wire:loading wire:target="login">Iniciando...</span>
+                <span wire:loading.remove wire:target="login">{{ __("Iniciar Sesion") }}</span>
+                <span wire:loading wire:target="login">{{ __("Iniciando...") }}</span>
             </button>
         </form>
     </div>
 
     <div class="auth-footer">
-        ¿No tienes cuenta? <a href="{{ route('register') }}">Regístrate gratis</a>
+        {{ __("¿No tienes cuenta?") }} <a href="{{ route('register') }}">{{ __("Registrate gratis") }}</a>
     </div>
 </div>

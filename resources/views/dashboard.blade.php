@@ -15,14 +15,14 @@
             <div class="dashboard-welcome">
                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                     <div>
-                        <h4 class="welcome-title mb-1">¡Bienvenido, {{ Auth::user()->name }}!</h4>
-                        <p class="welcome-sub mb-0">Aquí tienes un resumen de tu cuenta</p>
+                        <h4 class="welcome-title mb-1">{{ __("¡Bienvenido,") }} {{ Auth::user()->name }}!</h4>
+                        <p class="welcome-sub mb-0">{{ __("Aquí tienes un resumen de tu cuenta") }}</p>
                     </div>
                     <div class="vip-badge-wrap">
                         @if($vipStatus['is_active'])
-                            <span class="vip-badge active">✨ VIP ACTIVO</span>
+                            <span class="vip-badge active">✨ {{ __("VIP ACTIVO") }}</span>
                         @else
-                            <span class="vip-badge inactive">Sin membresía</span>
+                            <span class="vip-badge inactive">{{ __("Sin membresía") }}</span>
                         @endif
                     </div>
                 </div>
@@ -38,17 +38,17 @@
                     <div>
                         <h5 class="vip-card-title mb-1">
                             <i class="bi {{ $vipStatus['is_active'] ? 'bi-patch-check-fill' : 'bi-lock-fill' }} me-2"></i>
-                            Estado VIP: {{ $vipStatus['is_active'] ? 'ACTIVO' : 'INACTIVO' }}
+                            {{ __("Estado VIP:") }} {{ $vipStatus['is_active'] ? __('ACTIVO') : __('INACTIVO') }}
                         </h5>
                         @if($vipStatus['is_active'])
-                            <p class="vip-card-sub mb-0">{{ $vipStatus['days_remaining'] }} días restantes — Expira: {{ $vipStatus['expires_at']->format('d/m/Y') }}</p>
+                            <p class="vip-card-sub mb-0">{{ $vipStatus['days_remaining'] }} {{ __("días restantes — Expira:") }} {{ $vipStatus['expires_at']->format('d/m/Y') }}</p>
                         @else
-                            <p class="vip-card-sub mb-0">Activa tu membresía para acceder a contenido exclusivo</p>
+                            <p class="vip-card-sub mb-0">{{ __("Activa tu membresía para acceder a contenido exclusivo") }}</p>
                         @endif
                     </div>
                     @if(!$vipStatus['is_active'])
                         <a href="{{ route('gift-codes.redeem') }}" class="btn-dashboard-vip">
-                            <i class="bi bi-gift me-1"></i> Activar VIP
+                            <i class="bi bi-gift me-1"></i> {{ __("Activar VIP") }}
                         </a>
                     @endif
                 </div>
@@ -63,22 +63,22 @@
         <div class="col-md-4">
             <div class="dashboard-card h-100">
                 <div class="dashboard-card-header">
-                    <i class="bi bi-lightning-charge-fill me-2"></i>Acciones Rápidas
+                    <i class="bi bi-lightning-charge-fill me-2"></i>{{ __("Acciones Rápidas") }}
                 </div>
                 <div class="dashboard-card-body">
                     <a href="{{ route('gift-codes.redeem') }}" class="dashboard-action-item action-blue">
                         <span class="action-icon">🎁</span>
-                        <span>Canjear Código</span>
+                        <span>{{ __("Canjear Código") }}</span>
                         <i class="bi bi-chevron-right ms-auto"></i>
                     </a>
                     <a href="{{ route('gift-codes.my-redemptions') }}" class="dashboard-action-item action-purple">
                         <span class="action-icon">📋</span>
-                        <span>Mis Canjes</span>
+                        <span>{{ __("Mis Canjes") }}</span>
                         <i class="bi bi-chevron-right ms-auto"></i>
                     </a>
                     <a href="{{ route('posts.index') }}" class="dashboard-action-item action-green">
                         <span class="action-icon">📄</span>
-                        <span>Ver Posts</span>
+                        <span>{{ __("Ver Posts") }}</span>
                         <i class="bi bi-chevron-right ms-auto"></i>
                     </a>
                 </div>
@@ -89,19 +89,19 @@
         <div class="col-md-4">
             <div class="dashboard-card h-100">
                 <div class="dashboard-card-header">
-                    <i class="bi bi-person-fill me-2"></i>Mi Cuenta
+                    <i class="bi bi-person-fill me-2"></i>{{ __("Mi Cuenta") }}
                 </div>
                 <div class="dashboard-card-body">
                     <div class="account-info-item">
-                        <span class="info-label"><i class="bi bi-envelope me-2"></i>Email</span>
+                        <span class="info-label"><i class="bi bi-envelope me-2"></i>{{ __("Email") }}</span>
                         <span class="info-value">{{ Auth::user()->email }}</span>
                     </div>
                     <div class="account-info-item">
-                        <span class="info-label"><i class="bi bi-calendar me-2"></i>Miembro desde</span>
+                        <span class="info-label"><i class="bi bi-calendar me-2"></i>{{ __("Miembro desde") }}</span>
                         <span class="info-value">{{ Auth::user()->created_at->format('M Y') }}</span>
                     </div>
                     <div class="account-info-item">
-                        <span class="info-label"><i class="bi bi-gift me-2"></i>Códigos canjeados</span>
+                        <span class="info-label"><i class="bi bi-gift me-2"></i>{{ __("Códigos canjeados") }}</span>
                         <span class="info-value">{{ Auth::user()->giftCodeRedemptions()->count() }}</span>
                     </div>
                 </div>
@@ -112,20 +112,20 @@
         <div class="col-md-4">
             <div class="dashboard-card h-100">
                 <div class="dashboard-card-header">
-                    <i class="bi bi-link-45deg me-2"></i>Enlaces Rápidos
+                    <i class="bi bi-link-45deg me-2"></i>{{ __("Enlaces Rápidos") }}
                 </div>
                 <div class="dashboard-card-body">
                     <a href="{{ route('profile') }}" class="dashboard-link-item">
-                        <i class="bi bi-pencil-square me-2"></i>Editar Perfil
+                        <i class="bi bi-pencil-square me-2"></i>{{ __("Editar Perfil") }}
                         <i class="bi bi-arrow-right ms-auto"></i>
                     </a>
                     <a href="{{ route('posts.index') }}" class="dashboard-link-item">
-                        <i class="bi bi-collection me-2"></i>Explorar Contenido
+                        <i class="bi bi-collection me-2"></i>{{ __("Explorar Contenido") }}
                         <i class="bi bi-arrow-right ms-auto"></i>
                     </a>
                     @if($vipStatus['is_active'])
                         <a href="#" class="dashboard-link-item link-vip">
-                            <i class="bi bi-star-fill me-2"></i>Contenido VIP
+                            <i class="bi bi-star-fill me-2"></i>{{ __("Contenido VIP") }}
                             <i class="bi bi-arrow-right ms-auto"></i>
                         </a>
                     @endif

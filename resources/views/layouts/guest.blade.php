@@ -233,23 +233,23 @@
         <div class="grid-decoration"></div>
         <div class="left-content">
             <a class="navbar-brand left-brand" href="{{ url('/') }}">{{ $siteName }}</a>
-            <p class="left-tagline">Tu plataforma para compartir<br>contenido de forma rápida<br>y organizada.</p>
+            <p class="left-tagline">{{ __("Tu plataforma para compartir") }}<br>{{ __("contenido de forma rápida") }}<br>{{ __("y organizada.") }}</p>
             <div class="feature-list">
                 <div class="feature-item">
                     <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-                    <span class="feature-text">Publicación instantánea de contenido</span>
+                    <span class="feature-text">{{ __("Publicación instantánea de contenido") }}</span>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon"><i class="fas fa-folder-open"></i></div>
-                    <span class="feature-text">Organizado por categorías y catálogos</span>
+                    <span class="feature-text">{{ __("Organizado por categorías y catálogos") }}</span>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon"><i class="fas fa-crown"></i></div>
-                    <span class="feature-text">Membresías VIP con acceso exclusivo</span>
+                    <span class="feature-text">{{ __("Membresías VIP con acceso exclusivo") }}</span>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-                    <span class="feature-text">Tu cuenta segura y protegida</span>
+                    <span class="feature-text">{{ __("Tu cuenta segura y protegida") }}</span>
                 </div>
             </div>
         </div>
