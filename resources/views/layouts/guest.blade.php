@@ -4,7 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @php $siteName = \App\Models\GeneralSetting::first()->site_name ?? config('app.name', 'Firepaste'); @endphp
+
+    @php
+        $settings = \App\Models\GeneralSetting::first();
+        $siteName = $settings->site_name ?? config('app.name', 'Firepaste');
+        $themeColor = preg_match('/^#[0-9A-Fa-f]{6}$/', $settings?->theme_color ?? '')
+            ? $settings->theme_color
+            : '#1e71bb';
+    @endphp
     <title>{{ $siteName }}</title>
 
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap/bootstrap.min.css') }}">
@@ -15,6 +22,10 @@
     @livewireStyles
 
     <style>
+        :root {
+            --theme-color: {{ $themeColor }};
+        }
+
         body.auth-page {
             font-family: 'DM Sans', sans-serif;
             min-height: 100vh;
@@ -25,6 +36,7 @@
             padding: 0;
         }
 
+        /* ── Panel izquierdo ── */
         body.auth-page .auth-panel-left {
             display: none;
             width: 45%;
@@ -48,7 +60,7 @@
             position: absolute;
             top: -200px; left: -200px;
             width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(102,126,234,0.25) 0%, transparent 70%);
+            background: radial-gradient(circle, color-mix(in srgb, var(--theme-color) 25%, transparent) 0%, transparent 70%);
             border-radius: 50%;
         }
 
@@ -57,8 +69,16 @@
             position: absolute;
             bottom: -150px; right: -100px;
             width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(118,75,162,0.2) 0%, transparent 70%);
+            background: radial-gradient(circle, color-mix(in srgb, var(--theme-color) 20%, transparent) 0%, transparent 70%);
             border-radius: 50%;
+        }
+
+        body.auth-page .grid-decoration {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                linear-gradient(color-mix(in srgb, var(--theme-color) 5%, transparent) 1px, transparent 1px),
+                linear-gradient(90deg, color-mix(in srgb, var(--theme-color) 5%, transparent) 1px, transparent 1px);
+            background-size: 40px 40px;
         }
 
         body.auth-page .left-content { position: relative; z-index: 2; }
@@ -78,30 +98,22 @@
         }
 
         body.auth-page .feature-list { display: flex; flex-direction: column; gap: 1.25rem; }
-
         body.auth-page .feature-item { display: flex; align-items: center; gap: 1rem; }
 
         body.auth-page .feature-icon {
             width: 42px; height: 42px;
             border-radius: 10px;
-            background: rgba(102,126,234,0.15);
-            border: 1px solid rgba(102,126,234,0.3);
+            background: color-mix(in srgb, var(--theme-color) 15%, transparent);
+            border: 1px solid color-mix(in srgb, var(--theme-color) 30%, transparent);
             display: flex; align-items: center; justify-content: center;
-            color: #667eea;
+            color: var(--theme-color);
             font-size: 1rem;
             flex-shrink: 0;
         }
 
         body.auth-page .feature-text { color: rgba(255,255,255,0.65); font-size: 0.9rem; }
 
-        body.auth-page .grid-decoration {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-image:
-                linear-gradient(rgba(102,126,234,0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(102,126,234,0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-
+        /* ── Panel derecho ── */
         body.auth-page .auth-panel-right {
             flex: 1;
             display: flex;
@@ -121,12 +133,11 @@
             margin-bottom: 2rem;
         }
 
-        body.auth-page .auth-logo-mobile a {
-            font-size: 1.4rem;
-        }
+        body.auth-page .auth-logo-mobile a { font-size: 1.4rem; }
 
         @media (min-width: 992px) { body.auth-page .auth-logo-mobile { display: none; } }
 
+        /* ── Card de formulario ── */
         body.auth-page .auth-card {
             background: #fff;
             border-radius: 20px;
@@ -146,6 +157,7 @@
 
         body.auth-page .auth-card-subtitle { color: #888; font-size: 0.9rem; margin-bottom: 2rem; }
 
+        /* ── Campos ── */
         body.auth-page .auth-label {
             display: block;
             font-size: 0.82rem;
@@ -170,9 +182,9 @@
         }
 
         body.auth-page .auth-input:focus {
-            border-color: #667eea;
+            border-color: var(--theme-color);
             background: #fff;
-            box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--theme-color) 10%, transparent);
         }
 
         body.auth-page .auth-input.is-invalid { border-color: #ef4444; background: #fff5f5; }
@@ -184,14 +196,20 @@
 
         body.auth-page .auth-field { margin-bottom: 1.25rem; }
 
+        /* ── Checkbox ── */
         body.auth-page .auth-check { display: flex; align-items: center; gap: 0.6rem; }
-        body.auth-page .auth-check input[type="checkbox"] { width: 16px; height: 16px; accent-color: #667eea; cursor: pointer; }
+        body.auth-page .auth-check input[type="checkbox"] {
+            width: 16px; height: 16px;
+            accent-color: var(--theme-color);
+            cursor: pointer;
+        }
         body.auth-page .auth-check label { font-size: 0.88rem; color: #666; cursor: pointer; margin: 0; }
 
+        /* ── Botón principal ── */
         body.auth-page .auth-btn {
             width: 100%;
             padding: 0.9rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--theme-color);
             color: #fff;
             border: none;
             border-radius: 10px;
@@ -203,19 +221,27 @@
         }
 
         body.auth-page .auth-btn:hover {
+            filter: brightness(0.88);
             transform: translateY(-1px);
-            box-shadow: 0 8px 25px rgba(102,126,234,0.4);
+            box-shadow: 0 8px 25px color-mix(in srgb, var(--theme-color) 40%, transparent);
         }
 
         body.auth-page .auth-btn:active { transform: translateY(0); }
 
-        body.auth-page .auth-forgot a { font-size: 0.83rem; color: #667eea; text-decoration: none; font-weight: 500; }
+        /* ── Links ── */
+        body.auth-page .auth-forgot a {
+            font-size: 0.83rem;
+            color: var(--theme-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
         body.auth-page .auth-forgot a:hover { text-decoration: underline; }
 
         body.auth-page .auth-footer { text-align: center; margin-top: 1.5rem; font-size: 0.88rem; color: #888; }
-        body.auth-page .auth-footer a { color: #667eea; font-weight: 600; text-decoration: none; }
+        body.auth-page .auth-footer a { color: var(--theme-color); font-weight: 600; text-decoration: none; }
         body.auth-page .auth-footer a:hover { text-decoration: underline; }
 
+        /* ── Alerta de estado ── */
         body.auth-page .auth-alert {
             padding: 0.8rem 1rem;
             background: #f0fdf4;
