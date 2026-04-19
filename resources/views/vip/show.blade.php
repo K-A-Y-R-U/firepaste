@@ -13,16 +13,14 @@
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <a href="{{ url('/posts/' . $post->id) }}" 
-                               class="nav-link fw-bold border px-3 py-2
-                               {{ request()->is('posts/*') ? 'active bg-light text-dark border-bottom border-primary' : '' }}" 
+                               class="nav-link fw-bold border px-3 py-2 {{ request()->is('posts/*') ? 'tab-active' : '' }}" 
                                aria-selected="{{ request()->is('posts/*') ? 'true' : 'false' }}">
                                {{ $post->pestana }}
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
                             <a href="{{ url('/vip/' . $post->id) }}" 
-                               class="nav-link fw-bold border px-3 py-2
-                               {{ request()->is('vip/*') ? 'active bg-light text-dark border-bottom border-primary' : '' }}" 
+                               class="nav-link fw-bold border px-3 py-2 {{ request()->is('vip/*') ? 'tab-active' : '' }}" 
                                aria-selected="{{ request()->is('vip/*') ? 'true' : 'false' }}">
                                👑 VIP
                             </a>
@@ -52,6 +50,33 @@
 </div>
 
 <style>
+    /* ── Tab activo con color del tema ── */
+    .nav-link.tab-active {
+        background: #f8f9fa !important;
+        color: #212529 !important;
+        border-bottom: 2px solid var(--theme-color) !important;
+    }
+    .nav-tabs .nav-link.tab-active,
+    .nav-tabs .nav-link.tab-active:hover,
+    .nav-tabs .nav-link.tab-active:focus {
+        border-bottom-color: var(--theme-color) !important;
+        border-bottom-width: 2px !important;
+    }
+
+    /* ── Scrollbar de tablas con color del tema ── */
+    .content-wrapper table::-webkit-scrollbar { height: 6px; }
+    .content-wrapper table::-webkit-scrollbar-thumb {
+        background: var(--theme-color);
+        border-radius: 3px;
+    }
+    .content-wrapper table::-webkit-scrollbar-track { background: #f1f1f1; }
+
+    /* ── Visitas box con color del tema ── */
+    .visitas-box {
+        border-color: var(--theme-color) !important;
+        transition: all 0.2s ease;
+    }
+
     @media (max-width: 768px) {
         .card { border-radius: 0.5rem; }
         .card-body { overflow-x: hidden; }
@@ -105,8 +130,5 @@
         .visitas-box { font-size: 0.85rem; }
     }
     .paste-content * { max-width: 100%; box-sizing: border-box; }
-    .content-wrapper table::-webkit-scrollbar { height: 6px; }
-    .content-wrapper table::-webkit-scrollbar-thumb { background: #007bff; border-radius: 3px; }
-    .content-wrapper table::-webkit-scrollbar-track { background: #f1f1f1; }
 </style>
 @endsection
