@@ -138,20 +138,20 @@
         links.forEach(link => {
             const originalUrl = link.href;
 
-            // ✅ Saltar enlaces del mismo dominio
             if (originalUrl.includes(siteHost)) return;
 
-            // ✅ Llamar al proxy interno (sin CORS)
+            // ✅ Usar .text() y limpiar scripts inyectados antes de parsear JSON
             fetch(proxyUrl + encodeURIComponent(originalUrl))
-                .then(r => r.json())
-                .then(data => {
+                .then(r => r.text())
+                .then(text => {
+                    const clean = text.replace(/<script[^>]*>.*?<\/script>/gis, '').trim();
+                    const data = JSON.parse(clean);
                     if (data.status === 'success' && data.shortenedUrl) {
                         link.href = data.shortenedUrl;
                     }
                 })
-                .catch(() => { /* Falla silenciosa: se mantiene el enlace original */ });
+                .catch(() => {});
 
-            // ✅ Abrir siempre en nueva pestaña
             link.addEventListener('click', e => {
                 e.preventDefault();
                 window.open(link.href, '_blank');
