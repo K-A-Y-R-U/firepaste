@@ -50,34 +50,27 @@
 </div>
 
 <style>
-    /* ── Tab activo con color del tema ── */
     .nav-link.tab-active {
         background: #f8f9fa !important;
         color: #212529 !important;
         border-bottom: 2px solid var(--theme-color) !important;
     }
-
     .nav-tabs .nav-link.tab-active,
     .nav-tabs .nav-link.tab-active:hover,
     .nav-tabs .nav-link.tab-active:focus {
         border-bottom-color: var(--theme-color) !important;
         border-bottom-width: 2px !important;
     }
-
-    /* ── Scrollbar de tablas con color del tema ── */
     .content-wrapper table::-webkit-scrollbar { height: 6px; }
     .content-wrapper table::-webkit-scrollbar-thumb {
         background: var(--theme-color);
         border-radius: 3px;
     }
     .content-wrapper table::-webkit-scrollbar-track { background: #f1f1f1; }
-
-    /* ── Visitas box hover con color del tema ── */
     .visitas-box {
         border-color: var(--theme-color) !important;
         transition: all 0.2s ease;
     }
-
     @media (max-width: 768px) {
         .card { border-radius: 0.5rem; }
         .card-body { overflow-x: hidden; }
@@ -135,37 +128,36 @@
 @endsection
 
 @section('scripts')
+@if(!empty($moreConfigs['url_shortener_enabled']) && !empty($moreConfigs['url_shortener_api_full']))
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const configApiUrl = @json($moreConfigs['url_shortener_api_full'] ?? null);
-        const isEnabled = @json($moreConfigs['url_shortener_enabled'] ?? false);
-
-        if (!isEnabled) return;
-        if (!configApiUrl || configApiUrl.trim() === "") return;
-
-        const apiUrl = configApiUrl;
+        const proxyUrl = "{{ route('api.shorten') }}?url=";
         const siteHost = window.location.hostname;
-        const links = document.querySelectorAll('.paste-content a[href^="http"]');
+        const links    = document.querySelectorAll('.paste-content a[href^="http"]');
 
         links.forEach(link => {
             const originalUrl = link.href;
+
+            // ✅ Saltar enlaces del mismo dominio
             if (originalUrl.includes(siteHost)) return;
 
-            fetch(`${apiUrl}${encodeURIComponent(originalUrl)}`)
-                .then(response => {
-                    if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-                    return response.json();
-                })
+            // ✅ Llamar al proxy interno (sin CORS)
+            fetch(proxyUrl + encodeURIComponent(originalUrl))
+                .then(r => r.json())
                 .then(data => {
-                    if (data.shortenedUrl) link.href = data.shortenedUrl;
+                    if (data.status === 'success' && data.shortenedUrl) {
+                        link.href = data.shortenedUrl;
+                    }
                 })
-                .catch(error => console.error('Error al acortar la URL:', error));
+                .catch(() => { /* Falla silenciosa: se mantiene el enlace original */ });
 
-            link.addEventListener('click', (e) => {
+            // ✅ Abrir siempre en nueva pestaña
+            link.addEventListener('click', e => {
                 e.preventDefault();
                 window.open(link.href, '_blank');
             });
         });
     });
 </script>
+@endif
 @endsection

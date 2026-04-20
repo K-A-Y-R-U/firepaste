@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
             Css::make('custom-styles', '/build/assets/filament.css'),
         ]);
 
-        View::composer(['layouts.header', 'layouts.footer', 'livewire.header', 'posts.show', 'vip.show'], function ($view) {
+        View::composer(['layouts.header', 'layouts.footer', 'livewire.header', 'posts.show', 'vip.show', 'dashboard', 'profile', 'membresias', 'gift-codes.redeem', 'gift-codes.my-redemptions'], function ($view) {
             try {
                 $settings = GeneralSetting::first();
                 $siteName = $settings?->site_name ?? config('app.name', 'Firepaste');

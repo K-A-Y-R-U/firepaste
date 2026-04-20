@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\GeneralSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PostController extends Controller
 {
-    /**
-     * ✅ La lógica de búsqueda/filtrado vive en App\Livewire\SearchPosts.
-     * Este método solo renderiza la vista.
-     */
     public function index()
     {
         return view('posts.index');
@@ -19,15 +17,50 @@ class PostController extends Controller
     public function show($id)
     {
         $post = Post::findOrFail($id);
-
-        // ✅ Visita única atómica con insertOrIgnore
         $post->registerUniqueView(request()->ip());
+        return view('posts.show', compact('post'));
+    }
 
-        $moreConfigs = [
-            'url_shortener_api_full'  => config('app.url_shortener_api_full'),
-            'url_shortener_enabled'   => config('app.url_shortener_enabled', false),
-        ];
+    public function shortenUrl(Request $request)
+    {
+        $url = $request->query('url');
 
-        return view('posts.show', compact('post', 'moreConfigs'));
+        if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) {
+            return response()->json(['status' => 'error', 'message' => 'URL inválida'], 400);
+        }
+
+        try {
+            $settings    = GeneralSetting::first();
+            $moreConfigs = $settings ? (json_decode($settings->more_configs, true) ?? []) : [];
+            $apiBase     = $moreConfigs['url_shortener_api_full'] ?? null;
+            $isEnabled   = $moreConfigs['url_shortener_enabled'] ?? false;
+
+            if (!$isEnabled || !$apiBase) {
+                return response()->json(['status' => 'error', 'message' => 'Acortador desactivado'], 503);
+            }
+
+            $response = Http::timeout(5)->get($apiBase . urlencode($url));
+
+            if (!$response->successful()) {
+                return response()->json(['status' => 'error', 'message' => 'Error de la API'], 502);
+            }
+
+            // Limpiar el <script> que AdLinkFly inyecta antes del JSON
+            $body = preg_replace('/<script[^>]*>.*?<\/script>/is', '', $response->body());
+            $body = trim($body);
+            $data = json_decode($body, true);
+
+            if (!$data || ($data['status'] ?? '') !== 'success' || empty($data['shortenedUrl'])) {
+                return response()->json(['status' => 'error', 'message' => 'Respuesta inválida'], 502);
+            }
+
+            return response()->json([
+                'status'       => 'success',
+                'shortenedUrl' => $data['shortenedUrl'],
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Error interno'], 500);
+        }
     }
 }

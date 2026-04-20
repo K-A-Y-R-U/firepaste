@@ -19,6 +19,11 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
 Route::get('/memberships', [MembresiaController::class, 'index'])->name('membresias');
 
+// ✅ Proxy interno para acortar URLs — evita CORS en el navegador
+Route::get('/api/shorten', [PostController::class, 'shortenUrl'])
+    ->middleware('throttle:60,1')
+    ->name('api.shorten');
+
 // Rutas protegidas
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
