@@ -30,7 +30,7 @@ class ApiPostController extends Controller
     {
         $token = env('BOT_API_TOKEN', '');
         if (empty($token)) {
-            return false; // Si no hay token configurado, bloquear todo
+            return false;
         }
         return $request->header('X-Bot-Token') === $token;
     }
@@ -38,8 +38,8 @@ class ApiPostController extends Controller
     private function noAutorizado()
     {
         return response()->json([
-            'ok'      => false,
-            'error'   => 'Token inválido o no configurado.',
+            'ok'    => false,
+            'error' => 'Token inválido o no configurado.',
         ], 401);
     }
 
@@ -70,7 +70,6 @@ class ApiPostController extends Controller
             return response()->json(['ok' => false, 'error' => 'nombre requerido'], 422);
         }
 
-        // Buscar primero (case-insensitive)
         $existing = Catalog::whereRaw('LOWER(nombre) = ?', [strtolower($nombre)])->first();
         if ($existing) {
             return response()->json([
@@ -80,9 +79,7 @@ class ApiPostController extends Controller
             ]);
         }
 
-        // Crear nuevo
         $slug = Str::slug($nombre);
-        // Asegurar slug único
         $base = $slug;
         $i = 1;
         while (Catalog::where('slug', $slug)->exists()) {
@@ -109,7 +106,6 @@ class ApiPostController extends Controller
     {
         if (!$this->autenticar($request)) return $this->noAutorizado();
 
-        // Validación básica
         $titulo = trim($request->input('titulo', ''));
         if (empty($titulo)) {
             return response()->json(['ok' => false, 'error' => 'titulo requerido'], 422);
@@ -120,16 +116,13 @@ class ApiPostController extends Controller
             return response()->json(['ok' => false, 'error' => 'contenido requerido'], 422);
         }
 
-        // Resolver catalog_id
         $catalogId   = null;
         $catalogName = trim($request->input('catalogo', ''));
 
         if (!empty($catalogName)) {
-            // Buscar por nombre (case-insensitive)
             $catalog = Catalog::whereRaw('LOWER(nombre) = ?', [strtolower($catalogName)])->first();
 
             if (!$catalog) {
-                // Crear automáticamente si no existe
                 $slug = Str::slug($catalogName);
                 $base = $slug; $i = 1;
                 while (Catalog::where('slug', $slug)->exists()) {
@@ -145,13 +138,14 @@ class ApiPostController extends Controller
             $catalogId = $catalog->id;
         }
 
-        // Crear el post
+        // Siempre se crea como borrador — se publica manualmente desde el panel
         $post = Post::create([
-            'titulo'     => $titulo,
-            'catalog_id' => $catalogId,
-            'pestana'    => trim($request->input('pestana', '')),
-            'contenido'  => $contenido,       // HTML generado por el bot
-            'is_vip'     => (bool) $request->input('is_vip', false),
+            'titulo'       => $titulo,
+            'catalog_id'   => $catalogId,
+            'pestana'      => trim($request->input('pestana', '')),
+            'contenido'    => $contenido,
+            'is_vip'       => (bool) $request->input('is_vip', false),
+            'is_published' => false,
         ]);
 
         return response()->json([
