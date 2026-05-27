@@ -68,11 +68,16 @@ class PostResource extends Resource
                             ->label('Pestaña')
                             ->maxLength(255),
 
-                        // ✅ Toggle is_vip visible y editable desde el panel
                         Forms\Components\Toggle::make('is_vip')
                             ->label('Contenido VIP')
                             ->helperText('Solo los usuarios con membresía VIP activa pueden ver este post.')
                             ->default(false),
+
+                        // ← NUEVO: toggle publicado/oculto
+                        Forms\Components\Toggle::make('is_published')
+                            ->label('Publicado')
+                            ->helperText('Si lo desactivas, el post no será visible en el sitio.')
+                            ->default(true),
                     ])
                     ->columns(2),
 
@@ -127,7 +132,6 @@ class PostResource extends Resource
                     ->sortable()
                     ->placeholder('Sin catálogo'),
 
-                // ✅ Columna VIP
                 Tables\Columns\IconColumn::make('is_vip')
                     ->label('VIP')
                     ->boolean()
@@ -135,6 +139,16 @@ class PostResource extends Resource
                     ->falseIcon('heroicon-o-lock-open')
                     ->trueColor('warning')
                     ->falseColor('gray'),
+
+                // ← NUEVO: columna publicado con ícono ✅ / 🚫
+                Tables\Columns\IconColumn::make('is_published')
+                    ->label('Publicado')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-eye')
+                    ->falseIcon('heroicon-o-eye-slash')
+                    ->trueColor('success')
+                    ->falseColor('danger')
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('views')
                     ->label('Visitas')
@@ -160,12 +174,18 @@ class PostResource extends Resource
                     ->preload()
                     ->placeholder('Todos los catálogos'),
 
-                // ✅ Filtro VIP
                 Tables\Filters\TernaryFilter::make('is_vip')
                     ->label('Tipo de contenido')
                     ->placeholder('Todos')
                     ->trueLabel('Solo VIP')
                     ->falseLabel('Solo públicos'),
+
+                // ← NUEVO: filtro publicado/oculto
+                Tables\Filters\TernaryFilter::make('is_published')
+                    ->label('Estado')
+                    ->placeholder('Todos')
+                    ->trueLabel('Publicados')
+                    ->falseLabel('Ocultos'),
 
                 Tables\Filters\Filter::make('sin_catalogo')
                     ->label('Sin catálogo')
@@ -181,7 +201,6 @@ class PostResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
 
-                    // ✅ Marcar como VIP en bulk
                     Tables\Actions\BulkAction::make('marcar_vip')
                         ->label('Marcar como VIP')
                         ->icon('heroicon-o-lock-closed')
@@ -191,7 +210,6 @@ class PostResource extends Resource
                         ->modalHeading('¿Marcar posts como VIP?')
                         ->modalDescription('Solo usuarios con membresía VIP podrán ver estos posts.'),
 
-                    // ✅ Desmarcar VIP en bulk
                     Tables\Actions\BulkAction::make('desmarcar_vip')
                         ->label('Hacer público')
                         ->icon('heroicon-o-lock-open')
@@ -200,6 +218,22 @@ class PostResource extends Resource
                         ->requiresConfirmation()
                         ->modalHeading('¿Hacer posts públicos?')
                         ->modalDescription('Estos posts serán visibles para todos los usuarios.'),
+
+                    // ← NUEVO: publicar/ocultar en masa
+                    Tables\Actions\BulkAction::make('publicar')
+                        ->label('Publicar')
+                        ->icon('heroicon-o-eye')
+                        ->color('success')
+                        ->action(fn ($records) => $records->each->update(['is_published' => true])),
+
+                    Tables\Actions\BulkAction::make('ocultar')
+                        ->label('Ocultar')
+                        ->icon('heroicon-o-eye-slash')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->modalHeading('¿Ocultar posts seleccionados?')
+                        ->modalDescription('Los posts dejarán de verse en el sitio.')
+                        ->action(fn ($records) => $records->each->update(['is_published' => false])),
 
                     Tables\Actions\BulkAction::make('asignar_catalogo')
                         ->label('Asignar catálogo')

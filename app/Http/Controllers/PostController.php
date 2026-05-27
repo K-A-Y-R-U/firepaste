@@ -17,6 +17,12 @@ class PostController extends Controller
     public function show($id)
     {
         $post = Post::findOrFail($id);
+
+        // Si está oculto, devuelve 404
+        if (!$post->is_published) {
+            abort(404);
+        }
+
         $post->registerUniqueView(request()->ip());
         return view('posts.show', compact('post'));
     }
@@ -45,7 +51,6 @@ class PostController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Error de la API'], 502);
             }
 
-            // Limpiar el <script> que AdLinkFly inyecta antes del JSON
             $body = preg_replace('/<script[^>]*>.*?<\/script>/is', '', $response->body());
             $body = trim($body);
             $data = json_decode($body, true);

@@ -15,12 +15,14 @@ class Post extends Model
         'pestana',
         'contenido',
         'is_vip',
+        'is_published',  // ← nuevo
         'catalog_id',
         'views',
     ];
 
     protected $casts = [
-        'is_vip' => 'boolean',
+        'is_vip'       => 'boolean',
+        'is_published' => 'boolean',  // ← nuevo
     ];
 
     protected static function boot()
@@ -88,13 +90,6 @@ class Post extends Model
             ->select('posts.*');
     }
 
-    /**
-     * ✅ Registra visita única por IP — atómico con insertOrIgnore.
-     *
-     * insertOrIgnore es una sola operación: si el índice único
-     * (post_id, ip_address) ya existe, no inserta y no lanza error.
-     * Solo incrementamos views si realmente se insertó una fila nueva.
-     */
     public function registerUniqueView(string $ip): void
     {
         $inserted = DB::table('post_views')->insertOrIgnore([

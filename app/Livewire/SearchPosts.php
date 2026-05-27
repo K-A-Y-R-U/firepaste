@@ -28,10 +28,10 @@ class SearchPosts extends Component
 
     public function render()
     {
-        $query = Post::query();
+        // Solo mostrar posts publicados en la web pública
+        $query = Post::query()->where('is_published', true);
 
         if ($this->search !== '') {
-            // scopeSearch ya hace el leftJoin y el select('posts.*')
             $query->search($this->search);
         }
 
